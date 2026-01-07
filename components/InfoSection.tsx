@@ -25,7 +25,7 @@ const infoCards = [
     },
     {
         icon: "🌟",
-        title: "Visión 2026",
+        title: "Visión 2026 - II",
         description: "Graduarnos con éxito y comenzar una nueva etapa llena de oportunidades profesionales.",
         gradient: "from-una-cyan to-una-cyan-light",
     },

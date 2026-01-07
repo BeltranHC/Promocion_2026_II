@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 // Floating particle component - Colores dorados
 function Particle({ delay, size, left }: { delay: number; size: number; left: string }) {
@@ -76,12 +77,42 @@ export default function Hero() {
 
             {/* Content */}
             <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
+                {/* Logos Institucionales */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                    className="flex items-center justify-center gap-6 md:gap-10 mb-8"
+                >
+                    {/* Escudo UNA */}
+                    <div className="relative w-20 h-20 md:w-28 md:h-28">
+                        <Image
+                            src="/images/escudo-una.png"
+                            alt="Escudo UNA Puno"
+                            fill
+                            className="object-contain drop-shadow-lg"
+                            priority
+                        />
+                    </div>
+
+                    {/* Logo EPIEI */}
+                    <div className="relative w-20 h-20 md:w-28 md:h-28">
+                        <Image
+                            src="/images/logo-epiei.png"
+                            alt="Logo EPIEI"
+                            fill
+                            className="object-contain drop-shadow-lg"
+                            priority
+                        />
+                    </div>
+                </motion.div>
+
                 {/* Badge Institucional */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                    className="inline-flex items-center gap-3 glass px-5 py-3 rounded-full mb-8"
+                    transition={{ duration: 0.6, delay: 0.1 }}
+                    className="inline-flex items-center gap-3 glass px-5 py-3 rounded-full mb-6"
                 >
                     <span className="w-2 h-2 bg-una-gold rounded-full animate-pulse" />
                     <span className="text-sm text-white/80 font-medium">
@@ -93,7 +124,7 @@ export default function Hero() {
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.1 }}
+                    transition={{ duration: 0.6, delay: 0.15 }}
                     className="mb-6"
                 >
                     <span className="text-una-cyan text-sm md:text-base uppercase tracking-widest font-medium">
@@ -116,7 +147,7 @@ export default function Hero() {
                         transition={{ duration: 1, delay: 0.8 }}
                         className="text-white text-glow"
                     >
-                        2026
+                        2026 - II
                     </motion.span>
                 </motion.h1>
 

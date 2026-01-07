@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 
 const socialLinks = [
     { name: "Instagram", icon: "📸", href: "#" },
@@ -35,17 +36,34 @@ export default function Footer() {
                         viewport={{ once: true }}
                         className="md:col-span-2"
                     >
-                        <Link href="#inicio" className="flex items-center gap-3 mb-4">
-                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-una-red to-una-gold flex items-center justify-center shadow-glow-gold">
-                                <span className="text-white font-bold text-xl">P</span>
+                        {/* Logos */}
+                        <div className="flex items-center gap-4 mb-6">
+                            <div className="relative w-16 h-16">
+                                <Image
+                                    src="/images/escudo-una.png"
+                                    alt="Escudo UNA Puno"
+                                    fill
+                                    className="object-contain"
+                                />
                             </div>
+                            <div className="relative w-16 h-16">
+                                <Image
+                                    src="/images/logo-epiei.png"
+                                    alt="Logo EPIEI"
+                                    fill
+                                    className="object-contain"
+                                />
+                            </div>
+                        </div>
+
+                        <Link href="#inicio" className="flex items-center gap-3 mb-4">
                             <div className="flex flex-col">
-                                <span className="text-xl font-bold gradient-text">Promoción 2026</span>
+                                <span className="text-xl font-bold gradient-text">Promoción 2026 - II</span>
                                 <span className="text-xs text-una-cyan uppercase tracking-wider">EPIEI - UNA Puno</span>
                             </div>
                         </Link>
                         <p className="text-white/50 text-sm leading-relaxed mb-4">
-                            Unidos construyendo nuestro futuro profesional. La página oficial de la Promoción 2026 de la
+                            Unidos construyendo nuestro futuro profesional. La página oficial de la Promoción 2026 - II de la
                             Escuela Profesional de Ingeniería Estadística e Informática.
                         </p>
                         {/* Universidad Badge */}
@@ -122,7 +140,7 @@ export default function Footer() {
                 >
                     <div>
                         <p className="text-white/40 text-sm">
-                            © {currentYear} Promoción 2026 - EPIEI. Todos los derechos reservados.
+                            © {currentYear} Promoción 2026 - II | EPIEI. Todos los derechos reservados.
                         </p>
                         <p className="text-una-cyan/50 text-xs mt-1">
                             Universidad Nacional del Altiplano - Puno, Perú

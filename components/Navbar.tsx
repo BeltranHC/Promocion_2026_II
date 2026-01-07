@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 
 const navLinks = [
     { name: "Inicio", href: "#inicio" },
@@ -35,11 +36,17 @@ export default function Navbar() {
             <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
                 {/* Logo */}
                 <Link href="#inicio" className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-una-red to-una-gold flex items-center justify-center shadow-glow-gold">
-                        <span className="text-white font-bold text-lg">P</span>
+                    {/* Logo EPIEI pequeño */}
+                    <div className="relative w-10 h-10">
+                        <Image
+                            src="/images/logo-epiei.png"
+                            alt="Logo EPIEI"
+                            fill
+                            className="object-contain"
+                        />
                     </div>
                     <div className="flex flex-col">
-                        <span className="text-lg font-bold gradient-text">Promoción 2026</span>
+                        <span className="text-lg font-bold gradient-text">Promoción 2026 - II</span>
                         <span className="text-[10px] text-una-cyan/80 uppercase tracking-wider hidden sm:block">
                             EPIEI - UNA Puno
                         </span>
