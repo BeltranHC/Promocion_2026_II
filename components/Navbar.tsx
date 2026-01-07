@@ -16,8 +16,10 @@ const navLinks = [
 export default function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
+        setMounted(true);
         const handleScroll = () => {
             setIsScrolled(window.scrollY > 50);
         };
@@ -27,8 +29,8 @@ export default function Navbar() {
 
     return (
         <motion.nav
-            initial={{ y: -100 }}
-            animate={{ y: 0 }}
+            initial={mounted ? { y: -100 } : false}
+            animate={mounted ? { y: 0 } : false}
             transition={{ duration: 0.5 }}
             className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? "glass py-3" : "bg-transparent py-5"
                 }`}
@@ -59,8 +61,8 @@ export default function Navbar() {
                         <motion.a
                             key={link.name}
                             href={link.href}
-                            initial={{ opacity: 0, y: -20 }}
-                            animate={{ opacity: 1, y: 0 }}
+                            initial={mounted ? { opacity: 0, y: -20 } : false}
+                            animate={mounted ? { opacity: 1, y: 0 } : false}
                             transition={{ delay: index * 0.1 }}
                             className="text-white/70 hover:text-una-gold transition-colors duration-300 text-sm font-medium uppercase tracking-wider"
                         >
@@ -69,8 +71,8 @@ export default function Navbar() {
                     ))}
                     <motion.a
                         href="#aportes"
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
+                        initial={mounted ? { opacity: 0, scale: 0.8 } : false}
+                        animate={mounted ? { opacity: 1, scale: 1 } : false}
                         transition={{ delay: 0.5 }}
                         className="gold-button text-sm"
                     >
