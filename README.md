@@ -2,9 +2,10 @@
 
 # ✨ **PROMOCIÓN 2026** ✨
 
-### 🎓 *Juntos hacia la graduación* 🎓
+### 🎓 Escuela Profesional de Ingeniería Estadística e Informática 🎓
+### 🏛️ Universidad Nacional del Altiplano - Puno 🏛️
 
-<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=28&duration=4000&pause=1000&color=6366F1&center=true&vCenter=true&random=false&width=600&lines=%C2%A1Bienvenidos+a+nuestra+promoci%C3%B3n!;Unidos+por+un+mismo+sue%C3%B1o;Promocion+2026+%F0%9F%8E%93" alt="Typing SVG" />
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=28&duration=4000&pause=1000&color=1E3A5F&center=true&vCenter=true&random=false&width=700&lines=%C2%A1Bienvenidos+a+nuestra+promoci%C3%B3n!;Unidos+por+un+mismo+sue%C3%B1o;EPIEI+Promoci%C3%B3n+2026+%F0%9F%8E%93;UNA+Puno+%F0%9F%8F%9B%EF%B8%8F" alt="Typing SVG" />
 
 <br/>
 
@@ -26,7 +27,7 @@
 
 > *"Más que una promoción, somos una familia"*
 
-Esta es la **página web oficial** de la Promoción 2026, diseñada para mantener conectados a todos los miembros de nuestra promoción universitaria. Un espacio digital moderno y futurista donde compartimos nuestros momentos, organizamos eventos y trabajamos juntos hacia nuestra meta de graduación.
+Esta es la **página web oficial** de la Promoción 2026 de la **Escuela Profesional de Ingeniería Estadística e Informática (EPIEI)** de la **Universidad Nacional del Altiplano - Puno**. Un espacio digital moderno y futurista diseñado para mantener conectados a todos los miembros de nuestra promoción, donde compartimos nuestros momentos, organizamos eventos y trabajamos juntos hacia nuestra meta de graduación.
 
 <div align="center">
 <img src="https://user-images.githubusercontent.com/74038190/212284158-e840e285-664b-44d7-b79b-e264b5e54825.gif" width="400">
@@ -171,6 +172,9 @@ cd promocion2026
 
 # Instalar dependencias
 npm install
+
+# Configurar variables de entorno
+cp .env.example .env.local
 ```
 
 </details>
@@ -248,7 +252,8 @@ npm start
 | 🎓 | Promoción 2026 |
 |:--:|:---------------|
 | 🌟 | Desarrollado con ❤️ por la Promoción 2026 |
-| 🎯 | Universidad |
+| 🏛️ | Universidad Nacional del Altiplano - Puno |
+| 📚 | Escuela Profesional de Ingeniería Estadística e Informática (EPIEI) |
 | 📅 | 2026 |
 
 </div>
@@ -271,8 +276,22 @@ npm start
 
 <br/>
 
-**Con 💜 desde la Promoción 2026**
+**Con 💜 desde la Promoción 2026 - EPIEI - UNA Puno**
 
 <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6&height=100&section=footer" width="100%"/>
+
+</div>
+
+---
+
+## 📄 **Licencia**
+
+Este proyecto está bajo la Licencia MIT. Consulta el archivo `LICENSE` para más detalles.
+
+---
+
+<div align="center">
+
+**© 2026 Promoción 2026 - EPIEI - Universidad Nacional del Altiplano - Puno**
 
 </div>
