@@ -1,8 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
-import { useRef } from "react";
 
 // Mock data - to be replaced with real data from backend
 const fundData = {
@@ -37,9 +35,6 @@ function ProgressBar({ percentage }: { percentage: number }) {
 }
 
 export default function FundSection() {
-    const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, margin: "-50px" });
-
     const percentage = (fundData.collected / fundData.goal) * 100;
 
     return (
@@ -47,11 +42,12 @@ export default function FundSection() {
             {/* Background Glow */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-una-gold/5 rounded-full blur-3xl pointer-events-none" />
 
-            <div className="max-w-5xl mx-auto relative" ref={ref}>
+            <div className="max-w-5xl mx-auto relative">
                 {/* Section Header */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-50px" }}
                     transition={{ duration: 0.6 }}
                     className="text-center mb-16"
                 >
@@ -67,7 +63,8 @@ export default function FundSection() {
                 {/* Main Fund Card */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-50px" }}
                     transition={{ duration: 0.6, delay: 0.2 }}
                     className="glass rounded-3xl p-8 md:p-12 border border-una-gold/10"
                 >
@@ -134,8 +131,9 @@ export default function FundSection() {
                                 <motion.div
                                     key={contributor.name}
                                     initial={{ opacity: 0, x: -20 }}
-                                    animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
-                                    transition={{ duration: 0.4, delay: 0.4 + index * 0.1 }}
+                                    whileInView={{ opacity: 1, x: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 0.4, delay: index * 0.1 }}
                                     className="flex items-center justify-between glass-card p-3 rounded-xl"
                                 >
                                     <div className="flex items-center gap-3">
@@ -173,8 +171,9 @@ export default function FundSection() {
                 {/* Info Note */}
                 <motion.div
                     initial={{ opacity: 0 }}
-                    animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-                    transition={{ duration: 0.5, delay: 0.8 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: 0.3 }}
                     className="mt-8 text-center"
                 >
                     <p className="text-white/40 text-sm">

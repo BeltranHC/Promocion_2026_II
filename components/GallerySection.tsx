@@ -1,8 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 // Placeholder gallery images - replace with actual photos later
 const galleryImages = [
@@ -22,14 +21,11 @@ const categories = [
 ];
 
 function GalleryItem({ image, index }: { image: typeof galleryImages[0]; index: number }) {
-    const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, margin: "-50px" });
-
     return (
         <motion.div
-            ref={ref}
             initial={{ opacity: 0, scale: 0.8 }}
-            animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.4, delay: index * 0.1 }}
             className="relative aspect-square group cursor-pointer overflow-hidden rounded-2xl"
         >
@@ -73,8 +69,6 @@ function GalleryItem({ image, index }: { image: typeof galleryImages[0]; index: 
 }
 
 export default function GallerySection() {
-    const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, margin: "-50px" });
     const [activeCategory, setActiveCategory] = useState("all");
 
     const filteredImages =
@@ -87,11 +81,12 @@ export default function GallerySection() {
             {/* Background */}
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-dark-card/50 to-transparent pointer-events-none" />
 
-            <div className="max-w-7xl mx-auto relative" ref={ref}>
+            <div className="max-w-7xl mx-auto relative">
                 {/* Section Header */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-50px" }}
                     transition={{ duration: 0.6 }}
                     className="text-center mb-12"
                 >
@@ -107,7 +102,8 @@ export default function GallerySection() {
                 {/* Category Filter */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-50px" }}
                     transition={{ duration: 0.5, delay: 0.2 }}
                     className="flex flex-wrap justify-center gap-3 mb-12"
                 >
@@ -138,7 +134,8 @@ export default function GallerySection() {
                 {/* Empty State Message */}
                 <motion.div
                     initial={{ opacity: 0 }}
-                    animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
                     transition={{ delay: 0.5 }}
                     className="text-center mt-12"
                 >
@@ -150,8 +147,9 @@ export default function GallerySection() {
                 {/* CTA */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                    transition={{ duration: 0.5, delay: 0.6 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: 0.3 }}
                     className="text-center mt-8"
                 >
                     <button className="neon-button">

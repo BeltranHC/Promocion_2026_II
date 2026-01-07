@@ -1,8 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
-import { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -22,11 +20,9 @@ const quickLinks = [
 
 export default function Footer() {
     const currentYear = new Date().getFullYear();
-    const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, margin: "-50px" });
 
     return (
-        <footer className="relative py-16 px-6 border-t border-una-gold/10" ref={ref}>
+        <footer className="relative py-16 px-6 border-t border-una-gold/10">
             {/* Background Gradient */}
             <div className="absolute inset-0 bg-gradient-to-t from-dark-bg to-transparent pointer-events-none" />
 
@@ -35,7 +31,8 @@ export default function Footer() {
                     {/* Brand */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
-                        animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
                         transition={{ duration: 0.5 }}
                         className="md:col-span-2"
                     >
@@ -79,7 +76,8 @@ export default function Footer() {
                     {/* Quick Links */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
-                        animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
                         transition={{ duration: 0.5, delay: 0.1 }}
                     >
                         <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
@@ -103,7 +101,8 @@ export default function Footer() {
                     {/* Social Links */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
-                        animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
                         transition={{ duration: 0.5, delay: 0.2 }}
                     >
                         <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
@@ -134,7 +133,8 @@ export default function Footer() {
                 {/* Bottom */}
                 <motion.div
                     initial={{ opacity: 0 }}
-                    animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: 0.3 }}
                     className="flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left"
                 >

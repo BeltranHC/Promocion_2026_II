@@ -1,8 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
-import { useRef } from "react";
 
 const infoCards = [
     {
@@ -32,14 +30,11 @@ const infoCards = [
 ];
 
 function InfoCard({ card, index }: { card: typeof infoCards[0]; index: number }) {
-    const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, margin: "-50px" });
-
     return (
         <motion.div
-            ref={ref}
             initial={{ opacity: 0, y: 50 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
             className="glass-card p-8 group"
         >
@@ -67,20 +62,18 @@ function InfoCard({ card, index }: { card: typeof infoCards[0]; index: number })
 }
 
 export default function InfoSection() {
-    const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, margin: "-50px" });
-
     return (
         <section id="info" className="py-24 px-6 relative">
             {/* Background Decoration */}
             <div className="absolute top-0 left-1/4 w-96 h-96 bg-una-red/5 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-una-gold/5 rounded-full blur-3xl pointer-events-none" />
 
-            <div className="max-w-7xl mx-auto relative" ref={ref}>
+            <div className="max-w-7xl mx-auto relative">
                 {/* Section Header */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-50px" }}
                     transition={{ duration: 0.6 }}
                     className="text-center mb-16"
                 >
@@ -103,8 +96,9 @@ export default function InfoSection() {
                 {/* Stats Row */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-                    transition={{ duration: 0.6, delay: 0.5 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-50px" }}
+                    transition={{ duration: 0.6, delay: 0.3 }}
                     className="glass mt-16 p-8 rounded-3xl"
                 >
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
@@ -130,8 +124,9 @@ export default function InfoSection() {
                 {/* Universidad Badge */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                    transition={{ duration: 0.5, delay: 0.7 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-50px" }}
+                    transition={{ duration: 0.5, delay: 0.4 }}
                     className="text-center mt-10"
                 >
                     <div className="inline-flex items-center gap-3 badge-una">

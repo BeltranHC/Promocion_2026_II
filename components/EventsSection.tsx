@@ -1,8 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
-import { useRef } from "react";
 
 const events = [
     {
@@ -40,14 +38,11 @@ const events = [
 ];
 
 function EventCard({ event, index, isLast }: { event: typeof events[0]; index: number; isLast: boolean }) {
-    const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, margin: "-50px" });
-
     return (
         <motion.div
-            ref={ref}
             initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.5, delay: index * 0.15 }}
             className="relative flex items-start gap-6 md:gap-10"
         >
@@ -83,20 +78,18 @@ function EventCard({ event, index, isLast }: { event: typeof events[0]; index: n
 }
 
 export default function EventsSection() {
-    const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, margin: "-50px" });
-
     return (
         <section id="eventos" className="py-24 px-6 relative overflow-hidden">
             {/* Background Decorations */}
             <div className="absolute top-1/2 left-0 w-72 h-72 bg-una-gold/5 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute bottom-0 right-0 w-96 h-96 bg-una-blue/5 rounded-full blur-3xl pointer-events-none" />
 
-            <div className="max-w-4xl mx-auto relative" ref={ref}>
+            <div className="max-w-4xl mx-auto relative">
                 {/* Section Header */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-50px" }}
                     transition={{ duration: 0.6 }}
                     className="text-center mb-16"
                 >
@@ -124,8 +117,9 @@ export default function EventsSection() {
                 {/* CTA */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                    transition={{ duration: 0.5, delay: 0.8 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-50px" }}
+                    transition={{ duration: 0.5, delay: 0.3 }}
                     className="text-center mt-12"
                 >
                     <p className="text-white/50 text-sm mb-4">
