@@ -79,8 +79,8 @@ export default function Hero() {
             <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
                 {/* Logos Institucionales */}
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    initial={mounted ? { opacity: 0, y: 20 } : false}
+                    animate={mounted ? { opacity: 1, y: 0 } : false}
                     transition={{ duration: 0.6 }}
                     className="flex items-center justify-center gap-6 md:gap-10 mb-8"
                 >
@@ -109,8 +109,8 @@ export default function Hero() {
 
                 {/* Badge Institucional */}
                 <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    initial={mounted ? { opacity: 0, y: 30 } : false}
+                    animate={mounted ? { opacity: 1, y: 0 } : false}
                     transition={{ duration: 0.6, delay: 0.1 }}
                     className="inline-flex items-center gap-3 glass px-5 py-3 rounded-full mb-6"
                 >
@@ -122,8 +122,8 @@ export default function Hero() {
 
                 {/* Escuela Profesional */}
                 <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    initial={mounted ? { opacity: 0, y: 30 } : false}
+                    animate={mounted ? { opacity: 1, y: 0 } : false}
                     transition={{ duration: 0.6, delay: 0.15 }}
                     className="mb-6"
                 >
@@ -134,16 +134,16 @@ export default function Hero() {
 
                 {/* Main Title */}
                 <motion.h1
-                    initial={{ opacity: 0, y: 40 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    initial={mounted ? { opacity: 0, y: 40 } : false}
+                    animate={mounted ? { opacity: 1, y: 0 } : false}
                     transition={{ duration: 0.8, delay: 0.2 }}
                     className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6"
                 >
                     <span className="gradient-text">Promoción</span>
                     <br />
                     <motion.span
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
+                        initial={mounted ? { opacity: 0 } : false}
+                        animate={mounted ? { opacity: 1 } : false}
                         transition={{ duration: 1, delay: 0.8 }}
                         className="text-white text-glow"
                     >
@@ -153,8 +153,8 @@ export default function Hero() {
 
                 {/* Subtitle */}
                 <motion.p
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    initial={mounted ? { opacity: 0, y: 30 } : false}
+                    animate={mounted ? { opacity: 1, y: 0 } : false}
                     transition={{ duration: 0.8, delay: 0.4 }}
                     className="text-lg md:text-xl text-white/60 mb-10 max-w-2xl mx-auto leading-relaxed"
                 >
@@ -164,8 +164,8 @@ export default function Hero() {
 
                 {/* CTA Buttons */}
                 <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    initial={mounted ? { opacity: 0, y: 30 } : false}
+                    animate={mounted ? { opacity: 1, y: 0 } : false}
                     transition={{ duration: 0.8, delay: 0.6 }}
                     className="flex flex-col sm:flex-row items-center justify-center gap-4"
                 >
@@ -182,8 +182,8 @@ export default function Hero() {
 
                 {/* Scroll Indicator */}
                 <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
+                    initial={mounted ? { opacity: 0 } : false}
+                    animate={mounted ? { opacity: 1 } : false}
                     transition={{ delay: 1.5 }}
                     className="absolute bottom-10 left-1/2 -translate-x-1/2"
                 >

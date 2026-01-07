@@ -1169,10 +1169,6 @@ video {
   --tw-text-opacity: 1;
   color: rgb(46 125 50 / var(--tw-text-opacity, 1));
 }
-.text-una-red {
-  --tw-text-opacity: 1;
-  color: rgb(139 21 56 / var(--tw-text-opacity, 1));
-}
 .text-una-red-light {
   --tw-text-opacity: 1;
   color: rgb(169 29 69 / var(--tw-text-opacity, 1));
@@ -1633,6 +1629,11 @@ body {
 
 .hover\:bg-una-gold\/20:hover {
   background-color: rgb(212 160 23 / 0.2);
+}
+
+.hover\:text-una-cyan:hover {
+  --tw-text-opacity: 1;
+  color: rgb(0 172 193 / var(--tw-text-opacity, 1));
 }
 
 .hover\:text-una-gold:hover {
