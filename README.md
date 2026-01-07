@@ -14,6 +14,8 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-3-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Framer Motion](https://img.shields.io/badge/Framer_Motion-11-0055FF?style=for-the-badge&logo=framer&logoColor=white)](https://www.framer.com/motion/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Prisma](https://img.shields.io/badge/Prisma-7-2D3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
 
 <br/>
 
@@ -120,6 +122,8 @@ UI/UX moderna y responsive
 | ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white) | 5.7.2 | Tipado estático |
 | ![TailwindCSS](https://img.shields.io/badge/-TailwindCSS-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white) | 3.4.17 | Estilos utilitarios |
 | ![Framer Motion](https://img.shields.io/badge/-Framer_Motion-0055FF?style=flat-square&logo=framer&logoColor=white) | 11.15.0 | Animaciones |
+| ![PostgreSQL](https://img.shields.io/badge/-PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white) | 16 | Base de datos |
+| ![Prisma](https://img.shields.io/badge/-Prisma-2D3748?style=flat-square&logo=prisma&logoColor=white) | 7.2.0 | ORM |
 
 ---
 
@@ -141,9 +145,16 @@ UI/UX moderna y responsive
 │   ├── 💵 FundSection.tsx  # Fondo de promoción
 │   └── 🦶 Footer.tsx       # Pie de página
 │
+├── 📂 lib/
+│   └── 🗄️  db.ts            # Cliente Prisma singleton
+│
+├── 📂 prisma/
+│   └── 📋 schema.prisma    # Esquema de base de datos
+│
 ├── ⚙️  tailwind.config.ts  # Configuración Tailwind
 ├── 📜 next.config.js       # Configuración Next.js
 ├── 📋 tsconfig.json        # Configuración TypeScript
+├── 🔧 prisma.config.ts     # Configuración Prisma
 └── 📦 package.json         # Dependencias
 ```
 
@@ -156,6 +167,7 @@ UI/UX moderna y responsive
 ```bash
 node >= 18.0.0
 npm >= 9.0.0
+PostgreSQL >= 15
 ```
 
 ### 🔧 Instalación
@@ -174,7 +186,16 @@ cd promocion2026
 npm install
 
 # Configurar variables de entorno
-cp .env.example .env.local
+cp .env.example .env
+
+# Editar .env con tu DATABASE_URL de PostgreSQL
+# DATABASE_URL="postgresql://usuario:contraseña@localhost:5433/promo_2026?schema=public"
+
+# Sincronizar base de datos
+npx prisma db push
+
+# Generar cliente Prisma
+npx prisma generate
 ```
 
 </details>
@@ -208,6 +229,9 @@ npm start
 | `npm run build` | 📦 Construye para producción |
 | `npm start` | 🚀 Inicia servidor de producción |
 | `npm run lint` | 🔍 Ejecuta el linter |
+| `npx prisma studio` | 🗄️ Abre interfaz visual de BD |
+| `npx prisma db push` | 🔄 Sincroniza esquema con BD |
+| `npx prisma generate` | ⚙️ Genera cliente Prisma |
 
 ---
 

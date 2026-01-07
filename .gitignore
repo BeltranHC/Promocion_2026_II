@@ -85,3 +85,7 @@ next-env.d.ts
 *.pem
 *.local
 .turbo/
+# ===========================
+# Prisma
+# ===========================
+/app/generated/prisma
