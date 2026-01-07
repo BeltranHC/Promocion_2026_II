@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import AnimateOnScroll from "./AnimateOnScroll";
 
 const infoCards = [
     {
@@ -31,33 +31,29 @@ const infoCards = [
 
 function InfoCard({ card, index }: { card: typeof infoCards[0]; index: number }) {
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-            className="glass-card p-8 group"
-        >
-            {/* Icon Container */}
-            <div
-                className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${card.gradient} flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}
-            >
-                {card.icon}
+        <AnimateOnScroll animation="fade-in-up" delay={index * 100}>
+            <div className="glass-card p-8 group h-full">
+                {/* Icon Container */}
+                <div
+                    className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${card.gradient} flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}
+                >
+                    {card.icon}
+                </div>
+
+                {/* Title */}
+                <h3 className="text-xl font-bold text-white mb-3 group-hover:text-una-gold transition-colors">
+                    {card.title}
+                </h3>
+
+                {/* Description */}
+                <p className="text-white/60 leading-relaxed text-sm">
+                    {card.description}
+                </p>
+
+                {/* Bottom Glow Line */}
+                <div className={`h-1 w-0 group-hover:w-full mt-6 rounded-full bg-gradient-to-r ${card.gradient} transition-all duration-500`} />
             </div>
-
-            {/* Title */}
-            <h3 className="text-xl font-bold text-white mb-3 group-hover:text-una-gold transition-colors">
-                {card.title}
-            </h3>
-
-            {/* Description */}
-            <p className="text-white/60 leading-relaxed text-sm">
-                {card.description}
-            </p>
-
-            {/* Bottom Glow Line */}
-            <div className={`h-1 w-0 group-hover:w-full mt-6 rounded-full bg-gradient-to-r ${card.gradient} transition-all duration-500`} />
-        </motion.div>
+        </AnimateOnScroll>
     );
 }
 
@@ -70,13 +66,7 @@ export default function InfoSection() {
 
             <div className="max-w-7xl mx-auto relative">
                 {/* Section Header */}
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-50px" }}
-                    transition={{ duration: 0.6 }}
-                    className="text-center mb-16"
-                >
+                <AnimateOnScroll animation="fade-in" className="text-center mb-16">
                     <h2 className="section-title">
                         <span className="gradient-text">Sobre Nosotros</span>
                     </h2>
@@ -84,7 +74,7 @@ export default function InfoSection() {
                     <p className="section-subtitle">
                         Conoce más sobre nuestra promoción y lo que nos hace especiales como EPIEI
                     </p>
-                </motion.div>
+                </AnimateOnScroll>
 
                 {/* Cards Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -94,46 +84,36 @@ export default function InfoSection() {
                 </div>
 
                 {/* Stats Row */}
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-50px" }}
-                    transition={{ duration: 0.6, delay: 0.3 }}
-                    className="glass mt-16 p-8 rounded-3xl"
-                >
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-                        <div>
-                            <div className="text-4xl font-bold gradient-text mb-2">50+</div>
-                            <div className="text-white/60 text-sm">Compañeros</div>
-                        </div>
-                        <div>
-                            <div className="text-4xl font-bold gradient-text mb-2">5</div>
-                            <div className="text-white/60 text-sm">Años Juntos</div>
-                        </div>
-                        <div>
-                            <div className="text-4xl font-bold gradient-text mb-2">2026</div>
-                            <div className="text-white/60 text-sm">Graduación</div>
-                        </div>
-                        <div>
-                            <div className="text-4xl font-bold gradient-text mb-2">∞</div>
-                            <div className="text-white/60 text-sm">Recuerdos</div>
+                <AnimateOnScroll animation="fade-in-up" delay={400} className="mt-16">
+                    <div className="glass p-8 rounded-3xl">
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                            <div>
+                                <div className="text-4xl font-bold gradient-text mb-2">50+</div>
+                                <div className="text-white/60 text-sm">Compañeros</div>
+                            </div>
+                            <div>
+                                <div className="text-4xl font-bold gradient-text mb-2">5</div>
+                                <div className="text-white/60 text-sm">Años Juntos</div>
+                            </div>
+                            <div>
+                                <div className="text-4xl font-bold gradient-text mb-2">2026</div>
+                                <div className="text-white/60 text-sm">Graduación</div>
+                            </div>
+                            <div>
+                                <div className="text-4xl font-bold gradient-text mb-2">∞</div>
+                                <div className="text-white/60 text-sm">Recuerdos</div>
+                            </div>
                         </div>
                     </div>
-                </motion.div>
+                </AnimateOnScroll>
 
                 {/* Universidad Badge */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-50px" }}
-                    transition={{ duration: 0.5, delay: 0.4 }}
-                    className="text-center mt-10"
-                >
+                <AnimateOnScroll animation="fade-in" delay={500} className="text-center mt-10">
                     <div className="inline-flex items-center gap-3 badge-una">
                         <span className="text-una-gold">🎓</span>
                         <span>Universidad Nacional del Altiplano - Puno</span>
                     </div>
-                </motion.div>
+                </AnimateOnScroll>
             </div>
         </section>
     );

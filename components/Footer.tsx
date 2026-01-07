@@ -1,8 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
+import AnimateOnScroll from "./AnimateOnScroll";
 
 const socialLinks = [
     { name: "Instagram", icon: "📸", href: "#" },
@@ -29,13 +29,7 @@ export default function Footer() {
             <div className="max-w-7xl mx-auto relative">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
                     {/* Brand */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.5 }}
-                        className="md:col-span-2"
-                    >
+                    <AnimateOnScroll animation="fade-in" className="md:col-span-2">
                         {/* Logos */}
                         <div className="flex items-center gap-4 mb-6">
                             <div className="relative w-16 h-16">
@@ -71,15 +65,10 @@ export default function Footer() {
                             <span>🎓</span>
                             <span className="text-xs">Universidad Nacional del Altiplano - Puno</span>
                         </div>
-                    </motion.div>
+                    </AnimateOnScroll>
 
                     {/* Quick Links */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.5, delay: 0.1 }}
-                    >
+                    <AnimateOnScroll animation="fade-in-up" delay={100}>
                         <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
                             <span className="w-1 h-4 bg-una-gold rounded-full"></span>
                             Enlaces Rápidos
@@ -96,15 +85,10 @@ export default function Footer() {
                                 </li>
                             ))}
                         </ul>
-                    </motion.div>
+                    </AnimateOnScroll>
 
                     {/* Social Links */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.5, delay: 0.2 }}
-                    >
+                    <AnimateOnScroll animation="fade-in-up" delay={200}>
                         <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
                             <span className="w-1 h-4 bg-una-gold rounded-full"></span>
                             Síguenos
@@ -124,20 +108,14 @@ export default function Footer() {
                         <p className="text-white/40 text-xs mt-4">
                             Únete a nuestro grupo de WhatsApp para estar al día con las noticias.
                         </p>
-                    </motion.div>
+                    </AnimateOnScroll>
                 </div>
 
                 {/* Divider - Colores institucionales */}
                 <div className="h-px bg-gradient-to-r from-transparent via-una-red via-una-gold via-una-blue to-transparent mb-8" />
 
                 {/* Bottom */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: 0.3 }}
-                    className="flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left"
-                >
+                <AnimateOnScroll animation="fade-in" className="flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
                     <div>
                         <p className="text-white/40 text-sm">
                             © {currentYear} Promoción 2026 - II | EPIEI. Todos los derechos reservados.
@@ -157,7 +135,7 @@ export default function Footer() {
                             JuniDev
                         </a>
                     </p>
-                </motion.div>
+                </AnimateOnScroll>
             </div>
         </footer>
     );

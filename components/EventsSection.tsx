@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import AnimateOnScroll from "./AnimateOnScroll";
 
 const events = [
     {
@@ -39,41 +39,40 @@ const events = [
 
 function EventCard({ event, index, isLast }: { event: typeof events[0]; index: number; isLast: boolean }) {
     return (
-        <motion.div
-            initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.5, delay: index * 0.15 }}
-            className="relative flex items-start gap-6 md:gap-10"
+        <AnimateOnScroll
+            animation={index % 2 === 0 ? "fade-in-left" : "fade-in-right"}
+            delay={index * 150}
         >
-            {/* Timeline Line & Dot */}
-            <div className="flex flex-col items-center">
-                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-una-red to-una-gold flex items-center justify-center text-2xl z-10 shadow-glow-gold">
-                    {event.icon}
+            <div className="relative flex items-start gap-6 md:gap-10">
+                {/* Timeline Line & Dot */}
+                <div className="flex flex-col items-center">
+                    <div className="w-14 h-14 rounded-full bg-gradient-to-br from-una-red to-una-gold flex items-center justify-center text-2xl z-10 shadow-glow-gold">
+                        {event.icon}
+                    </div>
+                    {!isLast && (
+                        <div className="w-0.5 h-full min-h-[120px] bg-gradient-to-b from-una-gold/50 to-transparent" />
+                    )}
                 </div>
-                {!isLast && (
-                    <div className="w-0.5 h-full min-h-[120px] bg-gradient-to-b from-una-gold/50 to-transparent" />
-                )}
-            </div>
 
-            {/* Event Content */}
-            <div className="glass-card p-6 flex-1 mb-6">
-                <div className="flex flex-wrap items-center gap-3 mb-3">
-                    <span className="px-3 py-1 bg-una-red/20 text-una-gold text-xs font-medium rounded-full uppercase border border-una-red/30">
-                        {event.status === "upcoming" ? "Próximo" : "Pasado"}
-                    </span>
-                    <span className="text-white/50 text-sm">
-                        {event.date}, {event.year}
-                    </span>
+                {/* Event Content */}
+                <div className="glass-card p-6 flex-1 mb-6">
+                    <div className="flex flex-wrap items-center gap-3 mb-3">
+                        <span className="px-3 py-1 bg-una-red/20 text-una-gold text-xs font-medium rounded-full uppercase border border-una-red/30">
+                            {event.status === "upcoming" ? "Próximo" : "Pasado"}
+                        </span>
+                        <span className="text-white/50 text-sm">
+                            {event.date}, {event.year}
+                        </span>
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-una-gold">
+                        {event.title}
+                    </h3>
+                    <p className="text-white/60 text-sm leading-relaxed">
+                        {event.description}
+                    </p>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-una-gold">
-                    {event.title}
-                </h3>
-                <p className="text-white/60 text-sm leading-relaxed">
-                    {event.description}
-                </p>
             </div>
-        </motion.div>
+        </AnimateOnScroll>
     );
 }
 
@@ -86,13 +85,7 @@ export default function EventsSection() {
 
             <div className="max-w-4xl mx-auto relative">
                 {/* Section Header */}
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-50px" }}
-                    transition={{ duration: 0.6 }}
-                    className="text-center mb-16"
-                >
+                <AnimateOnScroll animation="fade-in" className="text-center mb-16">
                     <h2 className="section-title">
                         <span className="gradient-text">Próximos Eventos</span>
                     </h2>
@@ -100,7 +93,7 @@ export default function EventsSection() {
                     <p className="section-subtitle">
                         Marca estas fechas importantes en tu calendario
                     </p>
-                </motion.div>
+                </AnimateOnScroll>
 
                 {/* Timeline */}
                 <div className="relative">
@@ -115,20 +108,14 @@ export default function EventsSection() {
                 </div>
 
                 {/* CTA */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-50px" }}
-                    transition={{ duration: 0.5, delay: 0.3 }}
-                    className="text-center mt-12"
-                >
+                <AnimateOnScroll animation="fade-in-up" delay={600} className="text-center mt-12">
                     <p className="text-white/50 text-sm mb-4">
                         ¿Tienes ideas para más eventos?
                     </p>
                     <button className="px-6 py-3 border border-una-gold/30 rounded-full text-white/70 hover:text-una-gold hover:border-una-gold transition-all duration-300 text-sm">
                         Proponer Evento
                     </button>
-                </motion.div>
+                </AnimateOnScroll>
             </div>
         </section>
     );
