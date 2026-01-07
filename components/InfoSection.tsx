@@ -1,35 +1,17 @@
 "use client";
 
 import AnimateOnScroll from "./AnimateOnScroll";
+import SectionHeader from "./ui/SectionHeader";
+import StatCard from "./ui/StatCard";
+import { INFO_CARDS, STATS } from "@/constants";
+import type { InfoCard } from "@/types";
 
-const infoCards = [
-    {
-        icon: "🎓",
-        title: "Ingeniería Estadística e Informática",
-        description: "Formando profesionales competentes en análisis de datos, desarrollo de software y tecnologías de información.",
-        gradient: "from-una-red to-una-red-light",
-    },
-    {
-        icon: "👥",
-        title: "Compañeros Unidos",
-        description: "Un grupo comprometido de futuros profesionales, listos para dejar huella en Puno y el mundo.",
-        gradient: "from-una-gold to-una-gold-light",
-    },
-    {
-        icon: "🏔️",
-        title: "Orgullo Altiplánico",
-        description: "Representando con honor a la Universidad Nacional del Altiplano y a nuestra tierra puneña.",
-        gradient: "from-una-blue to-una-blue-light",
-    },
-    {
-        icon: "🌟",
-        title: "Visión 2026 - II",
-        description: "Graduarnos con éxito y comenzar una nueva etapa llena de oportunidades profesionales.",
-        gradient: "from-una-cyan to-una-cyan-light",
-    },
-];
+interface InfoCardComponentProps {
+    card: InfoCard;
+    index: number;
+}
 
-function InfoCard({ card, index }: { card: typeof infoCards[0]; index: number }) {
+function InfoCardComponent({ card, index }: InfoCardComponentProps) {
     return (
         <AnimateOnScroll animation="fade-in-up" delay={index * 100}>
             <div className="glass-card p-8 group h-full">
@@ -65,21 +47,15 @@ export default function InfoSection() {
             <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-una-gold/5 rounded-full blur-3xl pointer-events-none" />
 
             <div className="max-w-7xl mx-auto relative">
-                {/* Section Header */}
-                <AnimateOnScroll animation="fade-in" className="text-center mb-16">
-                    <h2 className="section-title">
-                        <span className="gradient-text">Sobre Nosotros</span>
-                    </h2>
-                    <div className="line-glow" />
-                    <p className="section-subtitle">
-                        Conoce más sobre nuestra promoción y lo que nos hace especiales como EPIEI
-                    </p>
-                </AnimateOnScroll>
+                <SectionHeader
+                    title="Sobre Nosotros"
+                    subtitle="Conoce más sobre nuestra promoción y lo que nos hace especiales como EPIEI"
+                />
 
                 {/* Cards Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {infoCards.map((card, index) => (
-                        <InfoCard key={card.title} card={card} index={index} />
+                    {INFO_CARDS.map((card, index) => (
+                        <InfoCardComponent key={card.title} card={card} index={index} />
                     ))}
                 </div>
 
@@ -87,22 +63,9 @@ export default function InfoSection() {
                 <AnimateOnScroll animation="fade-in-up" delay={400} className="mt-16">
                     <div className="glass p-8 rounded-3xl">
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-                            <div>
-                                <div className="text-4xl font-bold gradient-text mb-2">50+</div>
-                                <div className="text-white/60 text-sm">Compañeros</div>
-                            </div>
-                            <div>
-                                <div className="text-4xl font-bold gradient-text mb-2">5</div>
-                                <div className="text-white/60 text-sm">Años Juntos</div>
-                            </div>
-                            <div>
-                                <div className="text-4xl font-bold gradient-text mb-2">2026</div>
-                                <div className="text-white/60 text-sm">Graduación</div>
-                            </div>
-                            <div>
-                                <div className="text-4xl font-bold gradient-text mb-2">∞</div>
-                                <div className="text-white/60 text-sm">Recuerdos</div>
-                            </div>
+                            {STATS.map((stat) => (
+                                <StatCard key={stat.label} value={stat.value} label={stat.label} />
+                            ))}
                         </div>
                     </div>
                 </AnimateOnScroll>

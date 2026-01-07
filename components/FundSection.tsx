@@ -2,25 +2,15 @@
 
 import { useState, useEffect } from "react";
 import AnimateOnScroll from "./AnimateOnScroll";
+import SectionHeader from "./ui/SectionHeader";
+import { FUND_DATA, RECENT_CONTRIBUTORS } from "@/constants";
+import type { Contributor } from "@/types";
 
-// Mock data - to be replaced with real data from backend
-const fundData = {
-    goal: 5000,
-    collected: 1250,
-    weeklyAmount: 5,
-    totalMembers: 50,
-    contributingMembers: 25,
-};
+interface ProgressBarProps {
+    percentage: number;
+}
 
-const recentContributors = [
-    { name: "Juan P.", amount: 20, weeks: 4 },
-    { name: "María G.", amount: 15, weeks: 3 },
-    { name: "Carlos R.", amount: 25, weeks: 5 },
-    { name: "Ana M.", amount: 10, weeks: 2 },
-    { name: "Luis S.", amount: 20, weeks: 4 },
-];
-
-function ProgressBar({ percentage }: { percentage: number }) {
+function ProgressBar({ percentage }: ProgressBarProps) {
     const [width, setWidth] = useState(0);
 
     useEffect(() => {
@@ -39,8 +29,43 @@ function ProgressBar({ percentage }: { percentage: number }) {
     );
 }
 
+interface ContributorCardProps {
+    contributor: Contributor;
+    index: number;
+}
+
+function ContributorCard({ contributor, index }: ContributorCardProps) {
+    return (
+        <AnimateOnScroll
+            animation="fade-in-left"
+            delay={index * 100}
+        >
+            <div className="flex items-center justify-between glass-card p-3 rounded-xl">
+                <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-una-red to-una-gold flex items-center justify-center text-sm font-bold">
+                        {contributor.name[0]}
+                    </div>
+                    <div>
+                        <div className="text-sm font-medium text-white">
+                            {contributor.name}
+                        </div>
+                        <div className="text-xs text-white/40">
+                            {contributor.weeks} semanas
+                        </div>
+                    </div>
+                </div>
+                <div className="text-una-gold font-semibold">
+                    S/ {contributor.amount}
+                </div>
+            </div>
+        </AnimateOnScroll>
+    );
+}
+
 export default function FundSection() {
-    const percentage = (fundData.collected / fundData.goal) * 100;
+    const percentage = (FUND_DATA.collected / FUND_DATA.goal) * 100;
+    const remaining = FUND_DATA.goal - FUND_DATA.collected;
+    const pendingMembers = FUND_DATA.totalMembers - FUND_DATA.contributingMembers;
 
     return (
         <section id="aportes" className="py-24 px-6 relative">
@@ -48,16 +73,10 @@ export default function FundSection() {
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-una-gold/5 rounded-full blur-3xl pointer-events-none" />
 
             <div className="max-w-5xl mx-auto relative">
-                {/* Section Header */}
-                <AnimateOnScroll animation="fade-in" className="text-center mb-16">
-                    <h2 className="section-title">
-                        <span className="gradient-text">Fondo de Promoción</span>
-                    </h2>
-                    <div className="line-glow" />
-                    <p className="section-subtitle">
-                        Unidos construimos nuestros sueños. Cada aporte cuenta para lograr una graduación inolvidable.
-                    </p>
-                </AnimateOnScroll>
+                <SectionHeader
+                    title="Fondo de Promoción"
+                    subtitle="Unidos construimos nuestros sueños. Cada aporte cuenta para lograr una graduación inolvidable."
+                />
 
                 {/* Main Fund Card */}
                 <AnimateOnScroll animation="fade-in-up">
@@ -69,10 +88,10 @@ export default function FundSection() {
                             </div>
                             <div className="flex items-baseline justify-center gap-2">
                                 <span className="text-5xl md:text-6xl font-bold gradient-text">
-                                    S/ {fundData.collected.toLocaleString()}
+                                    S/ {FUND_DATA.collected.toLocaleString()}
                                 </span>
                                 <span className="text-xl text-white/40">
-                                    / S/ {fundData.goal.toLocaleString()}
+                                    / S/ {FUND_DATA.goal.toLocaleString()}
                                 </span>
                             </div>
                         </div>
@@ -82,7 +101,7 @@ export default function FundSection() {
                             <ProgressBar percentage={percentage} />
                             <div className="flex justify-between mt-3 text-sm text-white/50">
                                 <span>{percentage.toFixed(1)}% completado</span>
-                                <span>Faltan S/ {(fundData.goal - fundData.collected).toLocaleString()}</span>
+                                <span>Faltan S/ {remaining.toLocaleString()}</span>
                             </div>
                         </div>
 
@@ -90,25 +109,25 @@ export default function FundSection() {
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
                             <div className="glass-card p-4 text-center">
                                 <div className="text-2xl font-bold text-una-gold mb-1">
-                                    S/ {fundData.weeklyAmount}
+                                    S/ {FUND_DATA.weeklyAmount}
                                 </div>
                                 <div className="text-xs text-white/50">Por Semana</div>
                             </div>
                             <div className="glass-card p-4 text-center">
                                 <div className="text-2xl font-bold text-una-blue-light mb-1">
-                                    {fundData.totalMembers}
+                                    {FUND_DATA.totalMembers}
                                 </div>
                                 <div className="text-xs text-white/50">Compañeros</div>
                             </div>
                             <div className="glass-card p-4 text-center">
                                 <div className="text-2xl font-bold text-una-green-light mb-1">
-                                    {fundData.contributingMembers}
+                                    {FUND_DATA.contributingMembers}
                                 </div>
                                 <div className="text-xs text-white/50">Aportando</div>
                             </div>
                             <div className="glass-card p-4 text-center">
                                 <div className="text-2xl font-bold text-una-red-light mb-1">
-                                    {fundData.totalMembers - fundData.contributingMembers}
+                                    {pendingMembers}
                                 </div>
                                 <div className="text-xs text-white/50">Pendientes</div>
                             </div>
@@ -121,31 +140,12 @@ export default function FundSection() {
                                 Aportes Recientes
                             </h3>
                             <div className="space-y-3">
-                                {recentContributors.map((contributor, index) => (
-                                    <AnimateOnScroll
+                                {RECENT_CONTRIBUTORS.map((contributor, index) => (
+                                    <ContributorCard
                                         key={contributor.name}
-                                        animation="fade-in-left"
-                                        delay={index * 100}
-                                    >
-                                        <div className="flex items-center justify-between glass-card p-3 rounded-xl">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-una-red to-una-gold flex items-center justify-center text-sm font-bold">
-                                                    {contributor.name[0]}
-                                                </div>
-                                                <div>
-                                                    <div className="text-sm font-medium text-white">
-                                                        {contributor.name}
-                                                    </div>
-                                                    <div className="text-xs text-white/40">
-                                                        {contributor.weeks} semanas
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="text-una-gold font-semibold">
-                                                S/ {contributor.amount}
-                                            </div>
-                                        </div>
-                                    </AnimateOnScroll>
+                                        contributor={contributor}
+                                        index={index}
+                                    />
                                 ))}
                             </div>
                         </div>
@@ -165,7 +165,7 @@ export default function FundSection() {
                 {/* Info Note */}
                 <AnimateOnScroll animation="fade-in" className="mt-8 text-center">
                     <p className="text-white/40 text-sm">
-                        💡 El aporte semanal es de S/ 5 por compañero. Los fondos se utilizarán para los eventos de graduación.
+                        💡 El aporte semanal es de S/ {FUND_DATA.weeklyAmount} por compañero. Los fondos se utilizarán para los eventos de graduación.
                     </p>
                 </AnimateOnScroll>
             </div>

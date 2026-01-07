@@ -1,43 +1,17 @@
 "use client";
 
 import AnimateOnScroll from "./AnimateOnScroll";
+import SectionHeader from "./ui/SectionHeader";
+import { EVENTS } from "@/constants";
+import type { Event } from "@/types";
 
-const events = [
-    {
-        date: "15 Mar",
-        year: "2026",
-        title: "Sesión de Fotos Oficial",
-        description: "Capturamos nuestros mejores momentos en una sesión fotográfica profesional en el campus UNA.",
-        status: "upcoming",
-        icon: "📸",
-    },
-    {
-        date: "20 Abr",
-        year: "2026",
-        title: "Paseo de Promoción",
-        description: "Viaje grupal para fortalecer lazos y crear nuevos recuerdos juntos. Destino por definir.",
-        status: "upcoming",
-        icon: "🏖️",
-    },
-    {
-        date: "10 Jun",
-        year: "2026",
-        title: "Cena de Gala",
-        description: "Celebración elegante para despedir nuestra etapa universitaria en la UNA Puno.",
-        status: "upcoming",
-        icon: "🎩",
-    },
-    {
-        date: "15 Jul",
-        year: "2026",
-        title: "Ceremonia de Graduación",
-        description: "El gran día donde recibiremos nuestros títulos como Ingenieros Estadísticos e Informáticos.",
-        status: "upcoming",
-        icon: "🎓",
-    },
-];
+interface EventCardProps {
+    event: Event;
+    index: number;
+    isLast: boolean;
+}
 
-function EventCard({ event, index, isLast }: { event: typeof events[0]; index: number; isLast: boolean }) {
+function EventCard({ event, index, isLast }: EventCardProps) {
     return (
         <AnimateOnScroll
             animation={index % 2 === 0 ? "fade-in-left" : "fade-in-right"}
@@ -84,25 +58,19 @@ export default function EventsSection() {
             <div className="absolute bottom-0 right-0 w-96 h-96 bg-una-blue/5 rounded-full blur-3xl pointer-events-none" />
 
             <div className="max-w-4xl mx-auto relative">
-                {/* Section Header */}
-                <AnimateOnScroll animation="fade-in" className="text-center mb-16">
-                    <h2 className="section-title">
-                        <span className="gradient-text">Próximos Eventos</span>
-                    </h2>
-                    <div className="line-glow" />
-                    <p className="section-subtitle">
-                        Marca estas fechas importantes en tu calendario
-                    </p>
-                </AnimateOnScroll>
+                <SectionHeader
+                    title="Próximos Eventos"
+                    subtitle="Marca estas fechas importantes en tu calendario"
+                />
 
                 {/* Timeline */}
                 <div className="relative">
-                    {events.map((event, index) => (
+                    {EVENTS.map((event, index) => (
                         <EventCard
                             key={event.title}
                             event={event}
                             index={index}
-                            isLast={index === events.length - 1}
+                            isLast={index === EVENTS.length - 1}
                         />
                     ))}
                 </div>

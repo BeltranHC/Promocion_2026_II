@@ -4,14 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-
-const navLinks = [
-    { name: "Inicio", href: "#inicio" },
-    { name: "Información", href: "#info" },
-    { name: "Eventos", href: "#eventos" },
-    { name: "Galería", href: "#galeria" },
-    { name: "Aportes", href: "#aportes" },
-];
+import { NAV_LINKS } from "@/constants";
 
 export default function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -25,6 +18,8 @@ export default function Navbar() {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
+    const closeMobileMenu = () => setIsMobileMenuOpen(false);
+
     return (
         <nav
             className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? "glass py-3" : "bg-transparent py-5"
@@ -33,7 +28,6 @@ export default function Navbar() {
             <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
                 {/* Logo */}
                 <Link href="#inicio" className="flex items-center gap-3">
-                    {/* Logo EPIEI pequeño */}
                     <div className="relative w-10 h-10">
                         <Image
                             src="/images/logo-epiei.png"
@@ -52,7 +46,7 @@ export default function Navbar() {
 
                 {/* Desktop Navigation */}
                 <div className="hidden md:flex items-center gap-8">
-                    {navLinks.map((link) => (
+                    {NAV_LINKS.map((link) => (
                         <a
                             key={link.name}
                             href={link.href}
@@ -61,10 +55,7 @@ export default function Navbar() {
                             {link.name}
                         </a>
                     ))}
-                    <a
-                        href="#aportes"
-                        className="gold-button text-sm"
-                    >
+                    <a href="#aportes" className="gold-button text-sm">
                         Aportar
                     </a>
                 </div>
@@ -73,6 +64,7 @@ export default function Navbar() {
                 <button
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                     className="md:hidden flex flex-col gap-1.5 p-2"
+                    aria-label="Toggle menu"
                 >
                     <motion.span
                         animate={isMobileMenuOpen ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }}
@@ -99,11 +91,11 @@ export default function Navbar() {
                         className="md:hidden glass mt-2 mx-4 rounded-2xl overflow-hidden"
                     >
                         <div className="flex flex-col p-4 gap-4">
-                            {navLinks.map((link) => (
+                            {NAV_LINKS.map((link) => (
                                 <a
                                     key={link.name}
                                     href={link.href}
-                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    onClick={closeMobileMenu}
                                     className="text-white/80 hover:text-una-gold transition-colors py-2 text-center uppercase tracking-wider text-sm"
                                 >
                                     {link.name}

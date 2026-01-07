@@ -2,25 +2,16 @@
 
 import { useState } from "react";
 import AnimateOnScroll from "./AnimateOnScroll";
+import SectionHeader from "./ui/SectionHeader";
+import { GALLERY_IMAGES, GALLERY_CATEGORIES } from "@/constants";
+import type { GalleryImage } from "@/types";
 
-// Placeholder gallery images - replace with actual photos later
-const galleryImages = [
-    { id: 1, category: "campus", color: "from-una-red to-una-gold", label: "Campus UNA" },
-    { id: 2, category: "friends", color: "from-una-gold to-una-blue", label: "Compañeros" },
-    { id: 3, category: "events", color: "from-una-blue to-una-cyan", label: "Eventos" },
-    { id: 4, category: "campus", color: "from-una-cyan to-una-green", label: "Campus UNA" },
-    { id: 5, category: "friends", color: "from-una-green to-una-gold", label: "Compañeros" },
-    { id: 6, category: "events", color: "from-una-red to-una-blue", label: "Eventos" },
-];
+interface GalleryItemProps {
+    image: GalleryImage;
+    index: number;
+}
 
-const categories = [
-    { id: "all", label: "Todas" },
-    { id: "campus", label: "Campus" },
-    { id: "friends", label: "Compañeros" },
-    { id: "events", label: "Eventos" },
-];
-
-function GalleryItem({ image, index }: { image: typeof galleryImages[0]; index: number }) {
+function GalleryItem({ image, index }: GalleryItemProps) {
     return (
         <AnimateOnScroll animation="scale-in" delay={index * 100}>
             <div className="relative aspect-square group cursor-pointer overflow-hidden rounded-2xl">
@@ -69,8 +60,8 @@ export default function GallerySection() {
 
     const filteredImages =
         activeCategory === "all"
-            ? galleryImages
-            : galleryImages.filter((img) => img.category === activeCategory);
+            ? GALLERY_IMAGES
+            : GALLERY_IMAGES.filter((img) => img.category === activeCategory);
 
     return (
         <section id="galeria" className="py-24 px-6 relative">
@@ -78,20 +69,15 @@ export default function GallerySection() {
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-dark-card/50 to-transparent pointer-events-none" />
 
             <div className="max-w-7xl mx-auto relative">
-                {/* Section Header */}
-                <AnimateOnScroll animation="fade-in" className="text-center mb-12">
-                    <h2 className="section-title">
-                        <span className="gradient-text">Galería de Fotos</span>
-                    </h2>
-                    <div className="line-glow" />
-                    <p className="section-subtitle">
-                        Los mejores momentos de nuestra promoción capturados en imágenes
-                    </p>
-                </AnimateOnScroll>
+                <SectionHeader
+                    title="Galería de Fotos"
+                    subtitle="Los mejores momentos de nuestra promoción capturados en imágenes"
+                    className="mb-12"
+                />
 
                 {/* Category Filter */}
                 <AnimateOnScroll animation="fade-in-up" className="flex flex-wrap justify-center gap-3 mb-12">
-                    {categories.map((category) => (
+                    {GALLERY_CATEGORIES.map((category) => (
                         <button
                             key={category.id}
                             onClick={() => setActiveCategory(category.id)}

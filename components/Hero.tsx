@@ -1,11 +1,17 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useRef, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
+import { PARTICLE_COUNT } from "@/constants";
 
-// Floating particle component - Colores dorados
-function Particle({ delay, size, left }: { delay: number; size: number; left: string }) {
+interface ParticleProps {
+    delay: number;
+    size: number;
+    left: string;
+}
+
+function Particle({ delay, size, left }: ParticleProps) {
     return (
         <motion.div
             className="absolute rounded-full"
@@ -34,34 +40,27 @@ function Particle({ delay, size, left }: { delay: number; size: number; left: st
 
 export default function Hero() {
     const [mounted, setMounted] = useState(false);
-    const ref = useRef(null);
 
     useEffect(() => {
         setMounted(true);
     }, []);
 
-    const fadeInUp = {
-        hidden: { opacity: 0, y: 30 },
-        visible: { opacity: 1, y: 0 }
-    };
-
     return (
         <section
             id="inicio"
             className="relative min-h-screen flex items-center justify-center overflow-hidden"
-            ref={ref}
         >
-            {/* Animated Background Gradient - Colores institucionales */}
+            {/* Animated Background Gradient */}
             <div className="absolute inset-0 bg-gradient-to-br from-dark-bg via-dark-card to-dark-bg">
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(139,21,56,0.15)_0%,_transparent_70%)]" />
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(212,160,23,0.1)_0%,_transparent_50%)]" />
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_rgba(21,101,192,0.08)_0%,_transparent_50%)]" />
             </div>
 
-            {/* Floating Particles - Dorados - Solo después del montaje */}
+            {/* Floating Particles */}
             {mounted && (
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                    {[...Array(15)].map((_, i) => (
+                    {Array.from({ length: PARTICLE_COUNT }, (_, i) => (
                         <Particle
                             key={i}
                             delay={i * 0.5}
@@ -82,11 +81,10 @@ export default function Hero() {
                 }}
             />
 
-            {/* Content - Sin animaciones de entrada, solo efectos hover */}
+            {/* Content */}
             <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
                 {/* Logos Institucionales */}
                 <div className="flex items-center justify-center gap-6 md:gap-10 mb-8">
-                    {/* Escudo UNA */}
                     <div className="relative w-20 h-20 md:w-28 md:h-28">
                         <Image
                             src="/images/escudo-una.png"
@@ -96,8 +94,6 @@ export default function Hero() {
                             priority
                         />
                     </div>
-
-                    {/* Logo EPIEI */}
                     <div className="relative w-20 h-20 md:w-28 md:h-28">
                         <Image
                             src="/images/logo-epiei.png"
