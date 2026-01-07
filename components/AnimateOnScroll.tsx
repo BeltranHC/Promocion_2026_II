@@ -18,17 +18,24 @@ export default function AnimateOnScroll({
     threshold = 0.1,
 }: AnimateOnScrollProps) {
     const ref = useRef<HTMLDivElement>(null);
-    const [isVisible, setIsVisible] = useState(false);
+    const [hasAnimated, setHasAnimated] = useState(false);
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
+        setIsClient(true);
+    }, []);
+
+    useEffect(() => {
+        if (!isClient) return;
+
         const observer = new IntersectionObserver(
             ([entry]) => {
-                if (entry.isIntersecting) {
-                    setIsVisible(true);
+                if (entry.isIntersecting && !hasAnimated) {
+                    setHasAnimated(true);
                     observer.unobserve(entry.target);
                 }
             },
-            { threshold }
+            { threshold, rootMargin: "50px" }
         );
 
         const currentRef = ref.current;
@@ -41,12 +48,20 @@ export default function AnimateOnScroll({
                 observer.unobserve(currentRef);
             }
         };
-    }, [threshold]);
+    }, [threshold, hasAnimated, isClient]);
+
+    // En SSR o antes de montar, mostrar contenido visible
+    // Después de montar, aplicar animaciones
+    const animationClass = !isClient
+        ? "" // En servidor: visible sin animación
+        : hasAnimated
+            ? `animate-${animation}` // Después de animar: con clase de animación
+            : "opacity-0"; // Antes de animar: oculto
 
     return (
         <div
             ref={ref}
-            className={`${className} ${isVisible ? `animate-${animation}` : "opacity-0"}`}
+            className={`${className} ${animationClass}`}
             style={{ animationDelay: `${delay}ms` }}
         >
             {children}
