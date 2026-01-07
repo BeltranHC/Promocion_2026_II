@@ -33,13 +33,13 @@ const infoCards = [
 
 function InfoCard({ card, index }: { card: typeof infoCards[0]; index: number }) {
     const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, margin: "-100px" });
+    const isInView = useInView(ref, { once: true, margin: "-50px" });
 
     return (
         <motion.div
             ref={ref}
             initial={{ opacity: 0, y: 50 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
             className="glass-card p-8 group"
         >
@@ -68,7 +68,7 @@ function InfoCard({ card, index }: { card: typeof infoCards[0]; index: number })
 
 export default function InfoSection() {
     const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, margin: "-100px" });
+    const isInView = useInView(ref, { once: true, margin: "-50px" });
 
     return (
         <section id="info" className="py-24 px-6 relative">
@@ -80,7 +80,7 @@ export default function InfoSection() {
                 {/* Section Header */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : {}}
+                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
                     transition={{ duration: 0.6 }}
                     className="text-center mb-16"
                 >
@@ -103,7 +103,7 @@ export default function InfoSection() {
                 {/* Stats Row */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : {}}
+                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
                     transition={{ duration: 0.6, delay: 0.5 }}
                     className="glass mt-16 p-8 rounded-3xl"
                 >
@@ -130,7 +130,7 @@ export default function InfoSection() {
                 {/* Universidad Badge */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : {}}
+                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                     transition={{ duration: 0.5, delay: 0.7 }}
                     className="text-center mt-10"
                 >

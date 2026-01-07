@@ -47,7 +47,7 @@ function EventCard({ event, index, isLast }: { event: typeof events[0]; index: n
         <motion.div
             ref={ref}
             initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
             transition={{ duration: 0.5, delay: index * 0.15 }}
             className="relative flex items-start gap-6 md:gap-10"
         >
@@ -84,7 +84,7 @@ function EventCard({ event, index, isLast }: { event: typeof events[0]; index: n
 
 export default function EventsSection() {
     const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, margin: "-100px" });
+    const isInView = useInView(ref, { once: true, margin: "-50px" });
 
     return (
         <section id="eventos" className="py-24 px-6 relative overflow-hidden">
@@ -96,7 +96,7 @@ export default function EventsSection() {
                 {/* Section Header */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : {}}
+                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
                     transition={{ duration: 0.6 }}
                     className="text-center mb-16"
                 >
@@ -124,7 +124,7 @@ export default function EventsSection() {
                 {/* CTA */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : {}}
+                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                     transition={{ duration: 0.5, delay: 0.8 }}
                     className="text-center mt-12"
                 >

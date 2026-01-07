@@ -38,7 +38,7 @@ function ProgressBar({ percentage }: { percentage: number }) {
 
 export default function FundSection() {
     const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, margin: "-100px" });
+    const isInView = useInView(ref, { once: true, margin: "-50px" });
 
     const percentage = (fundData.collected / fundData.goal) * 100;
 
@@ -51,7 +51,7 @@ export default function FundSection() {
                 {/* Section Header */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : {}}
+                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
                     transition={{ duration: 0.6 }}
                     className="text-center mb-16"
                 >
@@ -67,7 +67,7 @@ export default function FundSection() {
                 {/* Main Fund Card */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : {}}
+                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
                     transition={{ duration: 0.6, delay: 0.2 }}
                     className="glass rounded-3xl p-8 md:p-12 border border-una-gold/10"
                 >
@@ -134,7 +134,7 @@ export default function FundSection() {
                                 <motion.div
                                     key={contributor.name}
                                     initial={{ opacity: 0, x: -20 }}
-                                    animate={isInView ? { opacity: 1, x: 0 } : {}}
+                                    animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
                                     transition={{ duration: 0.4, delay: 0.4 + index * 0.1 }}
                                     className="flex items-center justify-between glass-card p-3 rounded-xl"
                                 >
@@ -173,7 +173,7 @@ export default function FundSection() {
                 {/* Info Note */}
                 <motion.div
                     initial={{ opacity: 0 }}
-                    animate={isInView ? { opacity: 1 } : {}}
+                    animate={isInView ? { opacity: 1 } : { opacity: 0 }}
                     transition={{ duration: 0.5, delay: 0.8 }}
                     className="mt-8 text-center"
                 >
