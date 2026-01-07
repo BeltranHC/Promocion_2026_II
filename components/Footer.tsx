@@ -147,7 +147,15 @@ export default function Footer() {
                         </p>
                     </div>
                     <p className="text-white/30 text-xs flex items-center gap-1">
-                        Hecho con <span className="text-una-red">❤️</span> por la promoción
+                        Desarrollado por{" "}
+                        <a
+                            href="https://beltranhc.github.io/portafolio/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-una-gold hover:text-una-cyan transition-colors font-medium"
+                        >
+                            JuniDev
+                        </a>
                     </p>
                 </motion.div>
             </div>
