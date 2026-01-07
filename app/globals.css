@@ -3,12 +3,19 @@
 @tailwind utilities;
 
 :root {
-  --electric-blue: #00d4ff;
-  --cyber-purple: #a855f7;
-  --neon-pink: #ff006e;
-  --neon-green: #00ff88;
-  --deep-space: #0a0a1a;
-  --cosmic: #0f0f2a;
+  /* Colores institucionales UNA Puno */
+  --una-red: #8B1538;
+  --una-red-light: #A91D45;
+  --una-gold: #D4A017;
+  --una-gold-light: #F5C518;
+  --una-blue: #1565C0;
+  --una-blue-light: #1E88E5;
+  --una-cyan: #00ACC1;
+  --una-green: #1B5E20;
+  /* Fondos */
+  --dark-bg: #0D1117;
+  --dark-card: #161B22;
+  --dark-elevated: #1C2128;
 }
 
 * {
@@ -22,76 +29,93 @@ html {
 }
 
 body {
-  background: var(--deep-space);
+  background: var(--dark-bg);
   color: #ffffff;
   font-family: var(--font-space-grotesk), system-ui, sans-serif;
   overflow-x: hidden;
 }
 
-/* Custom Scrollbar */
+/* Custom Scrollbar - Colores institucionales */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--deep-space);
+  background: var(--dark-bg);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, var(--electric-blue), var(--cyber-purple));
+  background: linear-gradient(180deg, var(--una-red), var(--una-gold));
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, var(--cyber-purple), var(--neon-pink));
+  background: linear-gradient(180deg, var(--una-gold), var(--una-blue));
 }
 
-/* Glassmorphism Effect */
+/* Glassmorphism Effect - Estilo elegante */
 .glass {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(22, 27, 34, 0.8);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(212, 160, 23, 0.15);
   border-radius: 16px;
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(22, 27, 34, 0.6);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(212, 160, 23, 0.1);
   border-radius: 20px;
   transition: all 0.3s ease;
 }
 
 .glass-card:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(0, 212, 255, 0.3);
+  background: rgba(28, 33, 40, 0.8);
+  border-color: rgba(212, 160, 23, 0.3);
   transform: translateY(-5px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4),
+              0 0 20px rgba(212, 160, 23, 0.1);
 }
 
 /* Glow Text Effects */
 .text-glow {
-  text-shadow: 0 0 10px var(--electric-blue),
-               0 0 20px var(--electric-blue),
-               0 0 30px var(--electric-blue);
+  text-shadow: 0 0 10px var(--una-gold),
+               0 0 20px var(--una-gold),
+               0 0 30px var(--una-gold-light);
 }
 
-.text-glow-purple {
-  text-shadow: 0 0 10px var(--cyber-purple),
-               0 0 20px var(--cyber-purple),
-               0 0 30px var(--cyber-purple);
+.text-glow-red {
+  text-shadow: 0 0 10px var(--una-red),
+               0 0 20px var(--una-red),
+               0 0 30px var(--una-red-light);
 }
 
-.text-glow-pink {
-  text-shadow: 0 0 10px var(--neon-pink),
-               0 0 20px var(--neon-pink);
+.text-glow-blue {
+  text-shadow: 0 0 10px var(--una-blue),
+               0 0 20px var(--una-blue);
 }
 
-/* Gradient Text */
+/* Gradient Text - Colores institucionales */
 .gradient-text {
-  background: linear-gradient(135deg, var(--electric-blue), var(--cyber-purple), var(--neon-pink));
+  background: linear-gradient(135deg, var(--una-gold) 0%, var(--una-gold-light) 50%, var(--una-gold) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% 200%;
+  animation: gradient-shift 4s ease infinite;
+}
+
+.gradient-text-red {
+  background: linear-gradient(135deg, var(--una-red) 0%, var(--una-red-light) 50%, var(--una-red) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient-text-multi {
+  background: linear-gradient(135deg, var(--una-red), var(--una-gold), var(--una-blue));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -104,7 +128,7 @@ body {
   50% { background-position: 100% 50%; }
 }
 
-/* Neon Button */
+/* Botón Institucional UNA */
 .neon-button {
   position: relative;
   padding: 14px 32px;
@@ -113,19 +137,19 @@ body {
   text-transform: uppercase;
   letter-spacing: 2px;
   color: #fff;
-  background: linear-gradient(135deg, var(--electric-blue), var(--cyber-purple));
+  background: linear-gradient(135deg, var(--una-red), var(--una-red-light));
   border: none;
   border-radius: 50px;
   cursor: pointer;
   overflow: hidden;
   transition: all 0.3s ease;
-  box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+  box-shadow: 0 0 20px rgba(139, 21, 56, 0.4);
 }
 
 .neon-button:hover {
   transform: translateY(-3px);
-  box-shadow: 0 0 40px rgba(0, 212, 255, 0.6),
-              0 0 60px rgba(168, 85, 247, 0.4);
+  box-shadow: 0 0 30px rgba(139, 21, 56, 0.5),
+              0 0 50px rgba(212, 160, 23, 0.3);
 }
 
 .neon-button::before {
@@ -135,7 +159,7 @@ body {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  background: linear-gradient(90deg, transparent, rgba(212, 160, 23, 0.4), transparent);
   transition: left 0.5s ease;
 }
 
@@ -143,9 +167,33 @@ body {
   left: 100%;
 }
 
-/* Animated Background */
+/* Botón Dorado */
+.gold-button {
+  position: relative;
+  padding: 14px 32px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--dark-bg);
+  background: linear-gradient(135deg, var(--una-gold), var(--una-gold-light));
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 20px rgba(212, 160, 23, 0.4);
+}
+
+.gold-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 30px rgba(212, 160, 23, 0.6),
+              0 0 50px rgba(245, 197, 24, 0.4);
+}
+
+/* Animated Background - Colores UNA */
 .bg-animated {
-  background: linear-gradient(-45deg, #0a0a1a, #1a1a3a, #0a0a2a, #1a0a2a);
+  background: linear-gradient(-45deg, #0D1117, #1a1520, #0D1520, #151a25);
   background-size: 400% 400%;
   animation: gradientBG 15s ease infinite;
 }
@@ -156,12 +204,12 @@ body {
   100% { background-position: 0% 50%; }
 }
 
-/* Floating Particles */
+/* Floating Particles - Dorados */
 .particle {
   position: absolute;
   width: 4px;
   height: 4px;
-  background: var(--electric-blue);
+  background: var(--una-gold);
   border-radius: 50%;
   animation: float-particle 8s infinite ease-in-out;
   opacity: 0.6;
@@ -194,10 +242,10 @@ body {
   margin: 0 auto 3rem;
 }
 
-/* Progress Bar Glow */
+/* Progress Bar Glow - Institucional */
 .progress-glow {
-  box-shadow: 0 0 10px var(--electric-blue),
-              0 0 20px var(--electric-blue);
+  box-shadow: 0 0 10px var(--una-gold),
+              0 0 20px var(--una-gold);
 }
 
 /* Card Grid */
@@ -214,13 +262,89 @@ body {
 
 .hover-lift:hover {
   transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 }
 
-/* Line Decoration */
+/* Line Decoration - Colores institucionales */
 .line-glow {
   height: 2px;
-  background: linear-gradient(90deg, transparent, var(--electric-blue), var(--cyber-purple), transparent);
+  background: linear-gradient(90deg, transparent, var(--una-red), var(--una-gold), var(--una-blue), transparent);
   margin: 2rem auto;
   width: 200px;
+}
+
+/* Badge institucional */
+.badge-una {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(139, 21, 56, 0.2);
+  border: 1px solid rgba(139, 21, 56, 0.3);
+  border-radius: 50px;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Bordes decorativos andinos */
+.border-andean {
+  border: 2px solid transparent;
+  border-image: linear-gradient(90deg, var(--una-red), var(--una-gold), var(--una-blue)) 1;
+}
+
+/* Shimmer effect */
+.shimmer {
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(212, 160, 23, 0.1), 
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Stats counter style */
+.stat-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--una-gold), var(--una-gold-light));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Icon container */
+.icon-container {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.icon-red {
+  background: linear-gradient(135deg, var(--una-red), var(--una-red-light));
+}
+
+.icon-gold {
+  background: linear-gradient(135deg, var(--una-gold), var(--una-gold-light));
+}
+
+.icon-blue {
+  background: linear-gradient(135deg, var(--una-blue), var(--una-blue-light));
+}
+
+.icon-cyan {
+  background: linear-gradient(135deg, var(--una-cyan), #26C6DA);
+}
+
+.icon-green {
+  background: linear-gradient(135deg, var(--una-green), #2E7D32);
 }

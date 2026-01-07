@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
-// Floating particle component
+// Floating particle component - Colores dorados
 function Particle({ delay, size, left }: { delay: number; size: number; left: string }) {
     return (
         <motion.div
@@ -13,7 +13,7 @@ function Particle({ delay, size, left }: { delay: number; size: number; left: st
                 height: size,
                 left: left,
                 bottom: "10%",
-                background: `radial-gradient(circle, rgba(0, 212, 255, 0.8), transparent)`,
+                background: `radial-gradient(circle, rgba(212, 160, 23, 0.8), transparent)`,
             }}
             animate={{
                 y: [-20, -200, -20],
@@ -43,13 +43,14 @@ export default function Hero() {
             id="inicio"
             className="relative min-h-screen flex items-center justify-center overflow-hidden"
         >
-            {/* Animated Background Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-br from-deep-space via-cosmic to-deep-space">
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(0,212,255,0.15)_0%,_transparent_70%)]" />
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(168,85,247,0.1)_0%,_transparent_50%)]" />
+            {/* Animated Background Gradient - Colores institucionales */}
+            <div className="absolute inset-0 bg-gradient-to-br from-dark-bg via-dark-card to-dark-bg">
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(139,21,56,0.15)_0%,_transparent_70%)]" />
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(212,160,23,0.1)_0%,_transparent_50%)]" />
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_rgba(21,101,192,0.08)_0%,_transparent_50%)]" />
             </div>
 
-            {/* Floating Particles */}
+            {/* Floating Particles - Dorados */}
             {mounted && (
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
                     {[...Array(15)].map((_, i) => (
@@ -65,25 +66,39 @@ export default function Hero() {
 
             {/* Grid Pattern Overlay */}
             <div
-                className="absolute inset-0 opacity-10"
+                className="absolute inset-0 opacity-5"
                 style={{
-                    backgroundImage: `linear-gradient(rgba(0, 212, 255, 0.1) 1px, transparent 1px),
-                           linear-gradient(90deg, rgba(0, 212, 255, 0.1) 1px, transparent 1px)`,
+                    backgroundImage: `linear-gradient(rgba(212, 160, 23, 0.2) 1px, transparent 1px),
+                           linear-gradient(90deg, rgba(212, 160, 23, 0.2) 1px, transparent 1px)`,
                     backgroundSize: "50px 50px",
                 }}
             />
 
             {/* Content */}
             <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
-                {/* Badge */}
+                {/* Badge Institucional */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
-                    className="inline-flex items-center gap-2 glass px-4 py-2 rounded-full mb-8"
+                    className="inline-flex items-center gap-3 glass px-5 py-3 rounded-full mb-8"
                 >
-                    <span className="w-2 h-2 bg-neon-green rounded-full animate-pulse" />
-                    <span className="text-sm text-white/80">Universidad Nacional</span>
+                    <span className="w-2 h-2 bg-una-gold rounded-full animate-pulse" />
+                    <span className="text-sm text-white/80 font-medium">
+                        Universidad Nacional del Altiplano - Puno
+                    </span>
+                </motion.div>
+
+                {/* Escuela Profesional */}
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.1 }}
+                    className="mb-6"
+                >
+                    <span className="text-una-cyan text-sm md:text-base uppercase tracking-widest font-medium">
+                        Escuela Profesional de Ingeniería Estadística e Informática
+                    </span>
                 </motion.div>
 
                 {/* Main Title */}
@@ -112,7 +127,7 @@ export default function Hero() {
                     transition={{ duration: 0.8, delay: 0.4 }}
                     className="text-lg md:text-xl text-white/60 mb-10 max-w-2xl mx-auto leading-relaxed"
                 >
-                    Unidos construyendo nuestro futuro. Bienvenidos a la página oficial
+                    Unidos construyendo nuestro futuro profesional. Bienvenidos a la página oficial
                     de nuestra promoción universitaria.
                 </motion.p>
 
@@ -128,7 +143,7 @@ export default function Hero() {
                     </a>
                     <a
                         href="#eventos"
-                        className="px-8 py-4 border border-white/20 rounded-full text-white/80 hover:text-white hover:border-electric-blue transition-all duration-300 uppercase text-sm tracking-wider font-medium"
+                        className="px-8 py-4 border border-una-gold/30 rounded-full text-white/80 hover:text-una-gold hover:border-una-gold transition-all duration-300 uppercase text-sm tracking-wider font-medium"
                     >
                         Ver Eventos
                     </a>
@@ -147,11 +162,11 @@ export default function Hero() {
                         className="flex flex-col items-center gap-2"
                     >
                         <span className="text-xs text-white/40 uppercase tracking-widest">Scroll</span>
-                        <div className="w-6 h-10 border-2 border-white/20 rounded-full flex justify-center pt-2">
+                        <div className="w-6 h-10 border-2 border-una-gold/30 rounded-full flex justify-center pt-2">
                             <motion.div
                                 animate={{ y: [0, 12, 0] }}
                                 transition={{ duration: 1.5, repeat: Infinity }}
-                                className="w-1.5 h-1.5 bg-electric-blue rounded-full"
+                                className="w-1.5 h-1.5 bg-una-gold rounded-full"
                             />
                         </div>
                     </motion.div>

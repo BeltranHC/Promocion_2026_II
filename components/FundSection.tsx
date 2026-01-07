@@ -23,15 +23,15 @@ const recentContributors = [
 
 function ProgressBar({ percentage }: { percentage: number }) {
     return (
-        <div className="relative h-4 bg-white/5 rounded-full overflow-hidden">
+        <div className="relative h-4 bg-dark-card rounded-full overflow-hidden border border-dark-border">
             <motion.div
                 initial={{ width: 0 }}
                 whileInView={{ width: `${percentage}%` }}
                 transition={{ duration: 1.5, ease: "easeOut" }}
                 viewport={{ once: true }}
-                className="absolute h-full bg-gradient-to-r from-electric-blue via-cyber-purple to-neon-pink rounded-full progress-glow"
+                className="absolute h-full bg-gradient-to-r from-una-red via-una-gold to-una-blue rounded-full progress-glow"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-pulse" />
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-pulse" />
         </div>
     );
 }
@@ -45,7 +45,7 @@ export default function FundSection() {
     return (
         <section id="aportes" className="py-24 px-6 relative">
             {/* Background Glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-cyber-purple/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-una-gold/5 rounded-full blur-3xl pointer-events-none" />
 
             <div className="max-w-5xl mx-auto relative" ref={ref}>
                 {/* Section Header */}
@@ -56,7 +56,7 @@ export default function FundSection() {
                     className="text-center mb-16"
                 >
                     <h2 className="section-title">
-                        <span className="gradient-text">Aportes de la Promoción</span>
+                        <span className="gradient-text">Fondo de Promoción</span>
                     </h2>
                     <div className="line-glow" />
                     <p className="section-subtitle">
@@ -69,7 +69,7 @@ export default function FundSection() {
                     initial={{ opacity: 0, y: 30 }}
                     animate={isInView ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.6, delay: 0.2 }}
-                    className="glass rounded-3xl p-8 md:p-12"
+                    className="glass rounded-3xl p-8 md:p-12 border border-una-gold/10"
                 >
                     {/* Amount Display */}
                     <div className="text-center mb-10">
@@ -98,25 +98,25 @@ export default function FundSection() {
                     {/* Stats Grid */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
                         <div className="glass-card p-4 text-center">
-                            <div className="text-2xl font-bold text-electric-blue mb-1">
+                            <div className="text-2xl font-bold text-una-gold mb-1">
                                 S/ {fundData.weeklyAmount}
                             </div>
                             <div className="text-xs text-white/50">Por Semana</div>
                         </div>
                         <div className="glass-card p-4 text-center">
-                            <div className="text-2xl font-bold text-cyber-purple mb-1">
+                            <div className="text-2xl font-bold text-una-blue-light mb-1">
                                 {fundData.totalMembers}
                             </div>
                             <div className="text-xs text-white/50">Compañeros</div>
                         </div>
                         <div className="glass-card p-4 text-center">
-                            <div className="text-2xl font-bold text-neon-green mb-1">
+                            <div className="text-2xl font-bold text-una-green-light mb-1">
                                 {fundData.contributingMembers}
                             </div>
                             <div className="text-xs text-white/50">Aportando</div>
                         </div>
                         <div className="glass-card p-4 text-center">
-                            <div className="text-2xl font-bold text-neon-pink mb-1">
+                            <div className="text-2xl font-bold text-una-red-light mb-1">
                                 {fundData.totalMembers - fundData.contributingMembers}
                             </div>
                             <div className="text-xs text-white/50">Pendientes</div>
@@ -126,7 +126,7 @@ export default function FundSection() {
                     {/* Recent Contributors */}
                     <div className="mb-10">
                         <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                            <span className="w-2 h-2 bg-neon-green rounded-full animate-pulse" />
+                            <span className="w-2 h-2 bg-una-gold rounded-full animate-pulse" />
                             Aportes Recientes
                         </h3>
                         <div className="space-y-3">
@@ -139,7 +139,7 @@ export default function FundSection() {
                                     className="flex items-center justify-between glass-card p-3 rounded-xl"
                                 >
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-electric-blue to-cyber-purple flex items-center justify-center text-sm font-bold">
+                                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-una-red to-una-gold flex items-center justify-center text-sm font-bold">
                                             {contributor.name[0]}
                                         </div>
                                         <div>
@@ -151,7 +151,7 @@ export default function FundSection() {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="text-electric-blue font-semibold">
+                                    <div className="text-una-gold font-semibold">
                                         S/ {contributor.amount}
                                     </div>
                                 </motion.div>
@@ -161,11 +161,11 @@ export default function FundSection() {
 
                     {/* CTA Button */}
                     <div className="text-center">
-                        <button className="neon-button text-lg px-10 py-5">
+                        <button className="gold-button text-lg px-10 py-5">
                             💳 Realizar Aporte
                         </button>
                         <p className="text-white/40 text-xs mt-4">
-                            Próximamente integración con Mercado Pago
+                            Próximamente integración con Yape y Plin
                         </p>
                     </div>
                 </motion.div>

@@ -35,10 +35,15 @@ export default function Navbar() {
             <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
                 {/* Logo */}
                 <Link href="#inicio" className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-electric-blue to-cyber-purple flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-una-red to-una-gold flex items-center justify-center shadow-glow-gold">
                         <span className="text-white font-bold text-lg">P</span>
                     </div>
-                    <span className="text-xl font-bold gradient-text">Promoción 2026</span>
+                    <div className="flex flex-col">
+                        <span className="text-lg font-bold gradient-text">Promoción 2026</span>
+                        <span className="text-[10px] text-una-cyan/80 uppercase tracking-wider hidden sm:block">
+                            EPIEI - UNA Puno
+                        </span>
+                    </div>
                 </Link>
 
                 {/* Desktop Navigation */}
@@ -50,7 +55,7 @@ export default function Navbar() {
                             initial={{ opacity: 0, y: -20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: index * 0.1 }}
-                            className="text-white/70 hover:text-electric-blue transition-colors duration-300 text-sm font-medium uppercase tracking-wider"
+                            className="text-white/70 hover:text-una-gold transition-colors duration-300 text-sm font-medium uppercase tracking-wider"
                         >
                             {link.name}
                         </motion.a>
@@ -60,7 +65,7 @@ export default function Navbar() {
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: 0.5 }}
-                        className="neon-button text-sm"
+                        className="gold-button text-sm"
                     >
                         Aportar
                     </motion.a>
@@ -73,15 +78,15 @@ export default function Navbar() {
                 >
                     <motion.span
                         animate={isMobileMenuOpen ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }}
-                        className="w-6 h-0.5 bg-white block"
+                        className="w-6 h-0.5 bg-una-gold block"
                     />
                     <motion.span
                         animate={isMobileMenuOpen ? { opacity: 0 } : { opacity: 1 }}
-                        className="w-6 h-0.5 bg-white block"
+                        className="w-6 h-0.5 bg-una-gold block"
                     />
                     <motion.span
                         animate={isMobileMenuOpen ? { rotate: -45, y: -8 } : { rotate: 0, y: 0 }}
-                        className="w-6 h-0.5 bg-white block"
+                        className="w-6 h-0.5 bg-una-gold block"
                     />
                 </button>
             </div>
@@ -101,12 +106,12 @@ export default function Navbar() {
                                     key={link.name}
                                     href={link.href}
                                     onClick={() => setIsMobileMenuOpen(false)}
-                                    className="text-white/80 hover:text-electric-blue transition-colors py-2 text-center uppercase tracking-wider text-sm"
+                                    className="text-white/80 hover:text-una-gold transition-colors py-2 text-center uppercase tracking-wider text-sm"
                                 >
                                     {link.name}
                                 </a>
                             ))}
-                            <a href="#aportes" className="neon-button text-center text-sm">
+                            <a href="#aportes" className="gold-button text-center text-sm">
                                 Aportar
                             </a>
                         </div>

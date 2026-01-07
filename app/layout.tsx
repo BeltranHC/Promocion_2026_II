@@ -10,13 +10,13 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-    title: "Promoción 2026 | Universidad",
-    description: "Página oficial de la Promoción 2026. Eventos, fotos, información y aportes de nuestra promoción universitaria.",
-    keywords: ["promoción 2026", "universidad", "graduación", "eventos universitarios"],
-    authors: [{ name: "Promoción 2026" }],
+    title: "Promoción 2026 | EPIEI - UNA Puno",
+    description: "Página oficial de la Promoción 2026 de la Escuela Profesional de Ingeniería Estadística e Informática - Universidad Nacional del Altiplano, Puno.",
+    keywords: ["promoción 2026", "UNA Puno", "EPIEI", "ingeniería estadística", "ingeniería informática", "universidad nacional del altiplano", "graduación"],
+    authors: [{ name: "Promoción 2026 - EPIEI" }],
     openGraph: {
-        title: "Promoción 2026 | Universidad",
-        description: "Página oficial de la Promoción 2026",
+        title: "Promoción 2026 | EPIEI - UNA Puno",
+        description: "Página oficial de la Promoción 2026 - Ingeniería Estadística e Informática",
         type: "website",
     },
 };

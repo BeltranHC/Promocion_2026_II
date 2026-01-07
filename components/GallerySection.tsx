@@ -6,12 +6,12 @@ import { useRef, useState } from "react";
 
 // Placeholder gallery images - replace with actual photos later
 const galleryImages = [
-    { id: 1, category: "campus", color: "from-electric-blue to-cyber-purple" },
-    { id: 2, category: "friends", color: "from-cyber-purple to-neon-pink" },
-    { id: 3, category: "events", color: "from-neon-pink to-neon-green" },
-    { id: 4, category: "campus", color: "from-neon-green to-electric-blue" },
-    { id: 5, category: "friends", color: "from-electric-blue to-neon-pink" },
-    { id: 6, category: "events", color: "from-cyber-purple to-neon-green" },
+    { id: 1, category: "campus", color: "from-una-red to-una-gold", label: "Campus UNA" },
+    { id: 2, category: "friends", color: "from-una-gold to-una-blue", label: "Compañeros" },
+    { id: 3, category: "events", color: "from-una-blue to-una-cyan", label: "Eventos" },
+    { id: 4, category: "campus", color: "from-una-cyan to-una-green", label: "Campus UNA" },
+    { id: 5, category: "friends", color: "from-una-green to-una-gold", label: "Compañeros" },
+    { id: 6, category: "events", color: "from-una-red to-una-blue", label: "Eventos" },
 ];
 
 const categories = [
@@ -39,16 +39,17 @@ function GalleryItem({ image, index }: { image: typeof galleryImages[0]; index: 
             />
 
             {/* Placeholder Icon */}
-            <div className="absolute inset-0 flex items-center justify-center">
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <span className="text-4xl opacity-50">📷</span>
+                <span className="text-xs text-white/50 mt-2">{image.label}</span>
             </div>
 
             {/* Hover Overlay */}
-            <div className="absolute inset-0 bg-deep-space/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+            <div className="absolute inset-0 bg-dark-bg/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                 <div className="text-center">
-                    <div className="w-12 h-12 rounded-full bg-electric-blue/20 flex items-center justify-center mx-auto mb-3 border border-electric-blue/50">
+                    <div className="w-12 h-12 rounded-full bg-una-gold/20 flex items-center justify-center mx-auto mb-3 border border-una-gold/50">
                         <svg
-                            className="w-5 h-5 text-electric-blue"
+                            className="w-5 h-5 text-una-gold"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -66,7 +67,7 @@ function GalleryItem({ image, index }: { image: typeof galleryImages[0]; index: 
             </div>
 
             {/* Glow Border on Hover */}
-            <div className="absolute inset-0 border-2 border-transparent group-hover:border-electric-blue/50 rounded-2xl transition-all duration-300" />
+            <div className="absolute inset-0 border-2 border-transparent group-hover:border-una-gold/50 rounded-2xl transition-all duration-300" />
         </motion.div>
     );
 }
@@ -84,7 +85,7 @@ export default function GallerySection() {
     return (
         <section id="galeria" className="py-24 px-6 relative">
             {/* Background */}
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-deep-space/50 to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-dark-card/50 to-transparent pointer-events-none" />
 
             <div className="max-w-7xl mx-auto relative" ref={ref}>
                 {/* Section Header */}
@@ -115,8 +116,8 @@ export default function GallerySection() {
                             key={category.id}
                             onClick={() => setActiveCategory(category.id)}
                             className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${activeCategory === category.id
-                                    ? "bg-gradient-to-r from-electric-blue to-cyber-purple text-white shadow-glow-blue"
-                                    : "glass text-white/60 hover:text-white hover:border-electric-blue/30"
+                                ? "bg-gradient-to-r from-una-red to-una-gold text-white shadow-glow-gold"
+                                : "glass text-white/60 hover:text-white hover:border-una-gold/30"
                                 }`}
                         >
                             {category.label}
