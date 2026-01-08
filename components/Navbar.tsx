@@ -55,9 +55,6 @@ export default function Navbar() {
                             {link.name}
                         </a>
                     ))}
-                    <a href="#aportes" className="gold-button text-sm">
-                        Aportar
-                    </a>
                 </div>
 
                 {/* Mobile Menu Button */}
@@ -101,9 +98,6 @@ export default function Navbar() {
                                     {link.name}
                                 </a>
                             ))}
-                            <a href="#aportes" className="gold-button text-center text-sm">
-                                Aportar
-                            </a>
                         </div>
                     </motion.div>
                 )}
