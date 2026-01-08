@@ -82,6 +82,17 @@ export default function EventDetailPage() {
         fetchEvent();
     }, [id]);
 
+    // Auto-slide de imágenes cada 4 segundos
+    useEffect(() => {
+        if (!event?.images || event.images.length <= 1) return;
+        
+        const interval = setInterval(() => {
+            setCurrentImageIndex((prev) => (prev + 1) % event.images!.length);
+        }, 4000);
+
+        return () => clearInterval(interval);
+    }, [event?.images]);
+
     const nextImage = () => {
         if (event?.images) {
             setCurrentImageIndex((prev) => (prev + 1) % event.images!.length);

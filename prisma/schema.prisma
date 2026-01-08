@@ -54,8 +54,9 @@ model Event {
   // Indicaciones/notas adicionales
   instructions    String?  @db.Text  // Indicaciones para asistentes
   
-  // Imágenes del evento
+  // Relaciones
   images          EventImage[]
+  ticketSales     TicketSale[]  // Ventas de entradas
   
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -72,6 +73,41 @@ model EventImage {
   createdAt DateTime @default(now())
 
   @@index([eventId])
+}
+
+// ============================================
+// TICKET SALES (Ventas de Entradas)
+// ============================================
+
+model TicketSale {
+  id            String   @id @default(cuid())
+  eventId       String
+  event         Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  
+  // Datos del comprador
+  buyerName     String            // Nombre del comprador
+  buyerPhone    String?           // Teléfono (opcional)
+  buyerEmail    String?           // Email (opcional)
+  
+  // Detalles de la venta
+  quantity      Int               // Cantidad de entradas
+  unitPrice     Float             // Precio unitario al momento de la venta
+  totalAmount   Float             // Monto total
+  
+  // Método de pago
+  paymentMethod String  @default("yape") // "yape" | "plin" | "efectivo" | "transferencia"
+  
+  // Estado de la venta
+  status        String  @default("confirmed") // "pending" | "confirmed" | "cancelled"
+  
+  // Notas adicionales del admin
+  notes         String?  @db.Text
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([eventId])
+  @@index([status])
 }
 
 // ============================================

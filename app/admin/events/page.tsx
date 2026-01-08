@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import AdminHeader from "@/components/admin/AdminHeader";
 import Image from "next/image";
 import {
@@ -20,6 +21,7 @@ import {
     Upload,
     List,
     FileText,
+    BarChart3,
 } from "lucide-react";
 
 interface EventImage {
@@ -614,6 +616,7 @@ function ImageManager({
 }
 
 export default function AdminEventsPage() {
+    const router = useRouter();
     const [events, setEvents] = useState<Event[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
@@ -795,6 +798,15 @@ export default function AdminEventsPage() {
 
                                     {/* Actions */}
                                     <div className="flex gap-2 flex-shrink-0">
+                                        {event.hasTickets && (
+                                            <button
+                                                onClick={() => router.push(`/admin/events/${event.id}/sales`)}
+                                                className="p-2 text-slate-400 hover:text-green-400 hover:bg-green-500/10 rounded-lg transition-colors"
+                                                title="Ver ventas de entradas"
+                                            >
+                                                <BarChart3 size={18} />
+                                            </button>
+                                        )}
                                         <button
                                             onClick={() => {
                                                 setSelectedEvent(event);
