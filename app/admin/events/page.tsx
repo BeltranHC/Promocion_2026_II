@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import AdminHeader from "@/components/admin/AdminHeader";
+import Image from "next/image";
 import {
     Plus,
     Search,
@@ -12,7 +13,27 @@ import {
     Clock,
     X,
     Save,
+    MapPin,
+    DollarSign,
+    Ticket,
+    ImageIcon,
+    Upload,
+    List,
+    FileText,
 } from "lucide-react";
+
+interface EventImage {
+    id: string;
+    url: string;
+    publicId: string;
+    caption?: string;
+    order: number;
+}
+
+interface ScheduleItem {
+    time: string;
+    activity: string;
+}
 
 interface Event {
     id: string;
@@ -24,6 +45,15 @@ interface Event {
     icon: string;
     order: number;
     isActive: boolean;
+    fullDescription?: string;
+    location?: string;
+    time?: string;
+    ticketPrice?: number;
+    maxTickets?: number;
+    hasTickets?: boolean;
+    schedule?: ScheduleItem[];
+    instructions?: string;
+    images?: EventImage[];
 }
 
 // Modal Component
@@ -32,11 +62,13 @@ function Modal({
     onClose,
     title,
     children,
+    size = "default",
 }: {
     isOpen: boolean;
     onClose: () => void;
     title: string;
     children: React.ReactNode;
+    size?: "default" | "large";
 }) {
     if (!isOpen) return null;
 
@@ -46,7 +78,7 @@ function Modal({
                 className="absolute inset-0 bg-black/60 backdrop-blur-sm"
                 onClick={onClose}
             />
-            <div className="relative bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-lg mx-4 max-h-[90vh] overflow-hidden">
+            <div className={`relative bg-slate-900 border border-slate-700 rounded-2xl mx-4 max-h-[90vh] overflow-hidden ${size === "large" ? "w-full max-w-4xl" : "w-full max-w-lg"}`}>
                 <div className="flex items-center justify-between p-6 border-b border-slate-700">
                     <h2 className="text-xl font-semibold text-white">{title}</h2>
                     <button
@@ -76,154 +108,379 @@ function EventForm({
     onCancel: () => void;
     isLoading: boolean;
 }) {
+    // Helper para convertir fecha del evento a formato date input
+    const getEventDateValue = () => {
+        if (event?.date && event?.year) {
+            // Intentar parsear "15 Mar" + "2026" a "2026-03-15"
+            const months: { [key: string]: string } = {
+                'Ene': '01', 'Feb': '02', 'Mar': '03', 'Abr': '04',
+                'May': '05', 'Jun': '06', 'Jul': '07', 'Ago': '08',
+                'Sep': '09', 'Oct': '10', 'Nov': '11', 'Dic': '12'
+            };
+            const parts = event.date.split(' ');
+            if (parts.length === 2) {
+                const day = parts[0].padStart(2, '0');
+                const month = months[parts[1]] || '01';
+                return `${event.year}-${month}-${day}`;
+            }
+        }
+        return "";
+    };
+
     const [formData, setFormData] = useState({
-        date: event?.date || "",
-        year: event?.year || "2026",
+        eventDate: getEventDateValue(),
         title: event?.title || "",
         description: event?.description || "",
         status: event?.status || "upcoming",
         icon: event?.icon || "📅",
+        fullDescription: event?.fullDescription || "",
+        location: event?.location || "",
+        time: event?.time || "",
+        ticketPrice: event?.ticketPrice?.toString() || "",
+        maxTickets: event?.maxTickets?.toString() || "",
+        hasTickets: event?.hasTickets || false,
+        instructions: event?.instructions || "",
     });
 
-    const icons = ["📅", "📸", "🎓", "🎉", "🏖️", "🎩", "🎭", "🎪", "🎨", "🎯"];
+    const [schedule, setSchedule] = useState<ScheduleItem[]>(
+        event?.schedule || []
+    );
+
+    const [activeTab, setActiveTab] = useState<"basic" | "details" | "schedule">("basic");
+
+    const icons = ["📅", "🍗", "🎉", "🎃", "🎓", "📸", "🏖️", "🎩", "🎭", "🎪", "🎨", "🎯", "🎵", "🍺", "🥳"];
+
+    // Helper para formatear fecha para guardar
+    const formatDateForSave = (dateStr: string) => {
+        if (!dateStr) return { date: "", year: "" };
+        const d = new Date(dateStr + 'T00:00:00');
+        const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+        return {
+            date: `${d.getDate()} ${months[d.getMonth()]}`,
+            year: d.getFullYear().toString()
+        };
+    };
+
+    const addScheduleItem = () => {
+        setSchedule([...schedule, { time: "", activity: "" }]);
+    };
+
+    const removeScheduleItem = (index: number) => {
+        setSchedule(schedule.filter((_, i) => i !== index));
+    };
+
+    const updateScheduleItem = (index: number, field: keyof ScheduleItem, value: string) => {
+        const updated = [...schedule];
+        updated[index][field] = value;
+        setSchedule(updated);
+    };
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        const { date, year } = formatDateForSave(formData.eventDate);
+        onSave({
+            date,
+            year,
+            title: formData.title,
+            description: formData.description,
+            status: formData.status,
+            icon: formData.icon,
+            fullDescription: formData.fullDescription,
+            location: formData.location,
+            time: formData.time,
+            ticketPrice: formData.ticketPrice ? parseFloat(formData.ticketPrice) : undefined,
+            maxTickets: formData.maxTickets ? parseInt(formData.maxTickets) : undefined,
+            hasTickets: formData.hasTickets,
+            instructions: formData.instructions,
+            schedule: schedule.filter(s => s.time && s.activity),
+        });
+    };
 
     return (
-        <form
-            onSubmit={(e) => {
-                e.preventDefault();
-                onSave(formData);
-            }}
-            className="space-y-5"
-        >
-            {/* Title */}
-            <div>
-                <label className="block text-slate-300 text-sm font-medium mb-2">
-                    Título del Evento
-                </label>
-                <input
-                    type="text"
-                    value={formData.title}
-                    onChange={(e) =>
-                        setFormData({ ...formData, title: e.target.value })
-                    }
-                    placeholder="Ej: Sesión de Fotos Oficial"
-                    required
-                    className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50"
-                />
+        <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Tabs */}
+            <div className="flex gap-2 border-b border-slate-700 pb-4">
+                <button
+                    type="button"
+                    onClick={() => setActiveTab("basic")}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === "basic" ? "bg-amber-500/20 text-amber-400" : "text-slate-400 hover:text-white"}`}
+                >
+                    Información Básica
+                </button>
+                <button
+                    type="button"
+                    onClick={() => setActiveTab("details")}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === "details" ? "bg-amber-500/20 text-amber-400" : "text-slate-400 hover:text-white"}`}
+                >
+                    Detalles
+                </button>
+                <button
+                    type="button"
+                    onClick={() => setActiveTab("schedule")}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === "schedule" ? "bg-amber-500/20 text-amber-400" : "text-slate-400 hover:text-white"}`}
+                >
+                    Cronograma
+                </button>
             </div>
 
-            {/* Date & Year */}
-            <div className="grid grid-cols-2 gap-4">
-                <div>
-                    <label className="block text-slate-300 text-sm font-medium mb-2">
-                        Fecha
-                    </label>
-                    <input
-                        type="text"
-                        value={formData.date}
-                        onChange={(e) =>
-                            setFormData({ ...formData, date: e.target.value })
-                        }
-                        placeholder="Ej: 15 Mar"
-                        required
-                        className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50"
-                    />
-                </div>
-                <div>
-                    <label className="block text-slate-300 text-sm font-medium mb-2">
-                        Año
-                    </label>
-                    <input
-                        type="text"
-                        value={formData.year}
-                        onChange={(e) =>
-                            setFormData({ ...formData, year: e.target.value })
-                        }
-                        placeholder="2026"
-                        required
-                        className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50"
-                    />
-                </div>
-            </div>
-
-            {/* Description */}
-            <div>
-                <label className="block text-slate-300 text-sm font-medium mb-2">
-                    Descripción
-                </label>
-                <textarea
-                    value={formData.description}
-                    onChange={(e) =>
-                        setFormData({ ...formData, description: e.target.value })
-                    }
-                    placeholder="Describe el evento..."
-                    required
-                    rows={3}
-                    className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 resize-none"
-                />
-            </div>
-
-            {/* Status */}
-            <div>
-                <label className="block text-slate-300 text-sm font-medium mb-2">
-                    Estado
-                </label>
-                <div className="flex gap-4">
-                    <label className="flex items-center gap-2 cursor-pointer">
+            {/* Basic Info Tab */}
+            {activeTab === "basic" && (
+                <div className="space-y-5">
+                    {/* Title */}
+                    <div>
+                        <label className="block text-slate-300 text-sm font-medium mb-2">
+                            Título del Evento *
+                        </label>
                         <input
-                            type="radio"
-                            name="status"
-                            value="upcoming"
-                            checked={formData.status === "upcoming"}
-                            onChange={(e) =>
-                                setFormData({ ...formData, status: e.target.value })
-                            }
-                            className="w-4 h-4 text-amber-500"
+                            type="text"
+                            value={formData.title}
+                            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                            placeholder="Ej: Pollada Pro-Fondos"
+                            required
+                            className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50"
                         />
-                        <Clock size={16} className="text-amber-400" />
-                        <span className="text-slate-300 text-sm">Próximo</span>
-                    </label>
-                    <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                            type="radio"
-                            name="status"
-                            value="past"
-                            checked={formData.status === "past"}
-                            onChange={(e) =>
-                                setFormData({ ...formData, status: e.target.value })
-                            }
-                            className="w-4 h-4 text-amber-500"
-                        />
-                        <CheckCircle size={16} className="text-emerald-400" />
-                        <span className="text-slate-300 text-sm">Pasado</span>
-                    </label>
-                </div>
-            </div>
+                    </div>
 
-            {/* Icon Selector */}
-            <div>
-                <label className="block text-slate-300 text-sm font-medium mb-2">
-                    Icono
-                </label>
-                <div className="flex flex-wrap gap-2">
-                    {icons.map((icon) => (
-                        <button
-                            key={icon}
-                            type="button"
-                            onClick={() => setFormData({ ...formData, icon })}
-                            className={`w-10 h-10 text-xl rounded-lg flex items-center justify-center transition-all ${formData.icon === icon
-                                    ? "bg-amber-500/20 border-2 border-amber-500"
-                                    : "bg-slate-800 border border-slate-700 hover:border-slate-600"
-                                }`}
-                        >
-                            {icon}
-                        </button>
+                    {/* Date & Time */}
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-slate-300 text-sm font-medium mb-2">
+                                Fecha del Evento *
+                            </label>
+                            <input
+                                type="date"
+                                value={formData.eventDate}
+                                onChange={(e) => setFormData({ ...formData, eventDate: e.target.value })}
+                                required
+                                className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 [color-scheme:dark]"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-slate-300 text-sm font-medium mb-2">
+                                Hora
+                            </label>
+                            <input
+                                type="time"
+                                value={formData.time}
+                                onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+                                className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 [color-scheme:dark]"
+                            />
+                        </div>
+                    </div>
+
+                    {/* Short Description */}
+                    <div>
+                        <label className="block text-slate-300 text-sm font-medium mb-2">
+                            Descripción Corta *
+                        </label>
+                        <textarea
+                            value={formData.description}
+                            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                            placeholder="Breve descripción para la vista previa..."
+                            required
+                            rows={2}
+                            className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 resize-none"
+                        />
+                    </div>
+
+                    {/* Status & Icon */}
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-slate-300 text-sm font-medium mb-2">
+                                Estado
+                            </label>
+                            <div className="flex gap-4">
+                                <label className="flex items-center gap-2 cursor-pointer">
+                                    <input
+                                        type="radio"
+                                        name="status"
+                                        value="upcoming"
+                                        checked={formData.status === "upcoming"}
+                                        onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                                        className="w-4 h-4 text-amber-500"
+                                    />
+                                    <Clock size={16} className="text-amber-400" />
+                                    <span className="text-slate-300 text-sm">Próximo</span>
+                                </label>
+                                <label className="flex items-center gap-2 cursor-pointer">
+                                    <input
+                                        type="radio"
+                                        name="status"
+                                        value="past"
+                                        checked={formData.status === "past"}
+                                        onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                                        className="w-4 h-4 text-amber-500"
+                                    />
+                                    <CheckCircle size={16} className="text-emerald-400" />
+                                    <span className="text-slate-300 text-sm">Pasado</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <label className="block text-slate-300 text-sm font-medium mb-2">
+                                Icono
+                            </label>
+                            <div className="flex flex-wrap gap-1">
+                                {icons.map((icon) => (
+                                    <button
+                                        key={icon}
+                                        type="button"
+                                        onClick={() => setFormData({ ...formData, icon })}
+                                        className={`w-8 h-8 text-lg rounded-lg flex items-center justify-center transition-all ${formData.icon === icon
+                                            ? "bg-amber-500/20 border-2 border-amber-500"
+                                            : "bg-slate-800 border border-slate-700 hover:border-slate-600"
+                                            }`}
+                                    >
+                                        {icon}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Details Tab */}
+            {activeTab === "details" && (
+                <div className="space-y-5">
+                    {/* Location */}
+                    <div>
+                        <label className="block text-slate-300 text-sm font-medium mb-2">
+                            <MapPin size={14} className="inline mr-1" />
+                            Lugar del Evento
+                        </label>
+                        <input
+                            type="text"
+                            value={formData.location}
+                            onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                            placeholder="Ej: Patio Central de la UNA Puno"
+                            className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50"
+                        />
+                    </div>
+
+                    {/* Full Description */}
+                    <div>
+                        <label className="block text-slate-300 text-sm font-medium mb-2">
+                            <FileText size={14} className="inline mr-1" />
+                            Descripción Completa
+                        </label>
+                        <textarea
+                            value={formData.fullDescription}
+                            onChange={(e) => setFormData({ ...formData, fullDescription: e.target.value })}
+                            placeholder="Descripción detallada del evento..."
+                            rows={4}
+                            className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 resize-none"
+                        />
+                    </div>
+
+                    {/* Tickets Section */}
+                    <div className="p-4 bg-slate-800/30 rounded-xl border border-slate-700">
+                        <label className="flex items-center gap-2 cursor-pointer mb-4">
+                            <input
+                                type="checkbox"
+                                checked={formData.hasTickets}
+                                onChange={(e) => setFormData({ ...formData, hasTickets: e.target.checked })}
+                                className="w-4 h-4 rounded text-amber-500"
+                            />
+                            <Ticket size={16} className="text-amber-400" />
+                            <span className="text-slate-300 text-sm font-medium">Este evento tiene venta de entradas</span>
+                        </label>
+
+                        {formData.hasTickets && (
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-slate-300 text-sm font-medium mb-2">
+                                        <DollarSign size={14} className="inline mr-1" />
+                                        Precio (S/.)
+                                    </label>
+                                    <input
+                                        type="number"
+                                        step="0.01"
+                                        value={formData.ticketPrice}
+                                        onChange={(e) => setFormData({ ...formData, ticketPrice: e.target.value })}
+                                        placeholder="15.00"
+                                        className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-slate-300 text-sm font-medium mb-2">
+                                        Entradas Disponibles
+                                    </label>
+                                    <input
+                                        type="number"
+                                        value={formData.maxTickets}
+                                        onChange={(e) => setFormData({ ...formData, maxTickets: e.target.value })}
+                                        placeholder="100"
+                                        className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50"
+                                    />
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Instructions */}
+                    <div>
+                        <label className="block text-slate-300 text-sm font-medium mb-2">
+                            <List size={14} className="inline mr-1" />
+                            Indicaciones para Asistentes
+                        </label>
+                        <textarea
+                            value={formData.instructions}
+                            onChange={(e) => setFormData({ ...formData, instructions: e.target.value })}
+                            placeholder="• Traer DNI&#10;• Llegar 15 minutos antes&#10;• Código de vestimenta: casual"
+                            rows={4}
+                            className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 resize-none"
+                        />
+                    </div>
+                </div>
+            )}
+
+            {/* Schedule Tab */}
+            {activeTab === "schedule" && (
+                <div className="space-y-4">
+                    <p className="text-slate-400 text-sm">
+                        Define el cronograma del evento. Agrega cada actividad con su hora correspondiente.
+                    </p>
+
+                    {schedule.map((item, index) => (
+                        <div key={index} className="flex gap-3 items-start">
+                            <input
+                                type="text"
+                                value={item.time}
+                                onChange={(e) => updateScheduleItem(index, "time", e.target.value)}
+                                placeholder="18:00"
+                                className="w-24 px-3 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 text-sm"
+                            />
+                            <input
+                                type="text"
+                                value={item.activity}
+                                onChange={(e) => updateScheduleItem(index, "activity", e.target.value)}
+                                placeholder="Actividad..."
+                                className="flex-1 px-3 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 text-sm"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => removeScheduleItem(index)}
+                                className="p-2 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                            >
+                                <X size={18} />
+                            </button>
+                        </div>
                     ))}
+
+                    <button
+                        type="button"
+                        onClick={addScheduleItem}
+                        className="flex items-center gap-2 px-4 py-2 border border-dashed border-slate-600 text-slate-400 hover:text-amber-400 hover:border-amber-500/50 rounded-lg transition-colors w-full justify-center"
+                    >
+                        <Plus size={18} />
+                        Agregar Actividad
+                    </button>
                 </div>
-            </div>
+            )}
 
             {/* Buttons */}
-            <div className="flex gap-4 pt-4">
+            <div className="flex gap-4 pt-4 border-t border-slate-700">
                 <button
                     type="button"
                     onClick={onCancel}
@@ -250,12 +507,120 @@ function EventForm({
     );
 }
 
+// Image Manager Component
+function ImageManager({
+    event,
+    onImageUploaded,
+    onImageDeleted,
+}: {
+    event: Event;
+    onImageUploaded: () => void;
+    onImageDeleted: () => void;
+}) {
+    const [isUploading, setIsUploading] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setIsUploading(true);
+        try {
+            const formData = new FormData();
+            formData.append("image", file);
+
+            await fetch(`/api/admin/events/${event.id}/images`, {
+                method: "POST",
+                body: formData,
+            });
+
+            onImageUploaded();
+        } catch (error) {
+            console.error("Error uploading image:", error);
+        } finally {
+            setIsUploading(false);
+            if (fileInputRef.current) {
+                fileInputRef.current.value = "";
+            }
+        }
+    };
+
+    const handleDelete = async (imageId: string) => {
+        if (!confirm("¿Eliminar esta imagen?")) return;
+
+        try {
+            await fetch(`/api/admin/events/${event.id}/images?imageId=${imageId}`, {
+                method: "DELETE",
+            });
+            onImageDeleted();
+        } catch (error) {
+            console.error("Error deleting image:", error);
+        }
+    };
+
+    return (
+        <div className="space-y-4">
+            <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-white">
+                    Imágenes del Evento
+                </h3>
+                <label className="flex items-center gap-2 px-4 py-2 bg-slate-800 text-slate-300 hover:text-amber-400 rounded-lg cursor-pointer transition-colors">
+                    {isUploading ? (
+                        <div className="w-5 h-5 border-2 border-slate-400/30 border-t-slate-400 rounded-full animate-spin" />
+                    ) : (
+                        <Upload size={18} />
+                    )}
+                    <span className="text-sm">Subir Imagen</span>
+                    <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={handleUpload}
+                        disabled={isUploading}
+                        className="hidden"
+                    />
+                </label>
+            </div>
+
+            {event.images && event.images.length > 0 ? (
+                <div className="grid grid-cols-3 gap-4">
+                    {event.images.map((image) => (
+                        <div key={image.id} className="relative group aspect-video rounded-lg overflow-hidden bg-slate-800">
+                            <Image
+                                src={image.url}
+                                alt={image.caption || "Imagen del evento"}
+                                fill
+                                className="object-cover"
+                            />
+                            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <button
+                                    onClick={() => handleDelete(image.id)}
+                                    className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                                >
+                                    <Trash2 size={18} />
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <div className="text-center py-8 border border-dashed border-slate-700 rounded-xl">
+                    <ImageIcon size={40} className="mx-auto text-slate-600 mb-2" />
+                    <p className="text-slate-400 text-sm">No hay imágenes</p>
+                </div>
+            )}
+        </div>
+    );
+}
+
 export default function AdminEventsPage() {
     const [events, setEvents] = useState<Event[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isImageModalOpen, setIsImageModalOpen] = useState(false);
     const [editingEvent, setEditingEvent] = useState<Event | undefined>();
+    const [selectedEvent, setSelectedEvent] = useState<Event | undefined>();
     const [isSaving, setIsSaving] = useState(false);
 
     // Fetch events
@@ -311,7 +676,7 @@ export default function AdminEventsPage() {
 
     // Handle delete
     const handleDelete = async (id: string) => {
-        if (!confirm("¿Estás seguro de eliminar este evento?")) return;
+        if (!confirm("¿Estás seguro de eliminar este evento? Se eliminarán también todas sus imágenes.")) return;
 
         try {
             await fetch(`/api/admin/events/${id}`, { method: "DELETE" });
@@ -402,25 +767,44 @@ export default function AdminEventsPage() {
                                             </h3>
                                             <span
                                                 className={`px-2 py-0.5 rounded-full text-xs font-medium ${event.status === "upcoming"
-                                                        ? "bg-amber-500/20 text-amber-400"
-                                                        : "bg-emerald-500/20 text-emerald-400"
+                                                    ? "bg-amber-500/20 text-amber-400"
+                                                    : "bg-emerald-500/20 text-emerald-400"
                                                     }`}
                                             >
-                                                {event.status === "upcoming"
-                                                    ? "Próximo"
-                                                    : "Pasado"}
+                                                {event.status === "upcoming" ? "Próximo" : "Pasado"}
                                             </span>
+                                            {event.hasTickets && (
+                                                <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-cyan-500/20 text-cyan-400">
+                                                    <Ticket size={12} className="inline mr-1" />
+                                                    S/. {event.ticketPrice}
+                                                </span>
+                                            )}
                                         </div>
                                         <p className="text-slate-400 text-sm mb-2 line-clamp-2">
                                             {event.description}
                                         </p>
-                                        <p className="text-slate-500 text-sm">
-                                            📅 {event.date}, {event.year}
-                                        </p>
+                                        <div className="flex items-center gap-4 text-slate-500 text-sm">
+                                            <span>📅 {event.date}, {event.year}</span>
+                                            {event.time && <span>🕐 {event.time}</span>}
+                                            {event.location && <span className="truncate">📍 {event.location}</span>}
+                                            {event.images && event.images.length > 0 && (
+                                                <span>🖼️ {event.images.length} imagen(es)</span>
+                                            )}
+                                        </div>
                                     </div>
 
                                     {/* Actions */}
                                     <div className="flex gap-2 flex-shrink-0">
+                                        <button
+                                            onClick={() => {
+                                                setSelectedEvent(event);
+                                                setIsImageModalOpen(true);
+                                            }}
+                                            className="p-2 text-slate-400 hover:text-cyan-400 hover:bg-cyan-500/10 rounded-lg transition-colors"
+                                            title="Gestionar imágenes"
+                                        >
+                                            <ImageIcon size={18} />
+                                        </button>
                                         <button
                                             onClick={() => {
                                                 setEditingEvent(event);
@@ -452,6 +836,7 @@ export default function AdminEventsPage() {
                     setEditingEvent(undefined);
                 }}
                 title={editingEvent ? "Editar Evento" : "Nuevo Evento"}
+                size="large"
             >
                 <EventForm
                     event={editingEvent}
@@ -462,6 +847,32 @@ export default function AdminEventsPage() {
                     }}
                     isLoading={isSaving}
                 />
+            </Modal>
+
+            {/* Images Modal */}
+            <Modal
+                isOpen={isImageModalOpen}
+                onClose={() => {
+                    setIsImageModalOpen(false);
+                    setSelectedEvent(undefined);
+                }}
+                title={`Imágenes: ${selectedEvent?.title || ""}`}
+                size="large"
+            >
+                {selectedEvent && (
+                    <ImageManager
+                        event={selectedEvent}
+                        onImageUploaded={() => {
+                            fetchEvents();
+                            // Refresh selected event
+                            const updated = events.find(e => e.id === selectedEvent.id);
+                            if (updated) setSelectedEvent(updated);
+                        }}
+                        onImageDeleted={() => {
+                            fetchEvents();
+                        }}
+                    />
+                )}
             </Modal>
         </div>
     );

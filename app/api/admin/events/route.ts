@@ -21,10 +21,21 @@ export async function GET(request: NextRequest) {
 
         const events = await prisma.event.findMany({
             where: isPublic ? { isActive: true } : {},
+            include: {
+                images: {
+                    orderBy: { order: "asc" },
+                },
+            },
             orderBy: { order: "asc" },
         });
 
-        return NextResponse.json({ events });
+        // Parse schedule JSON for each event
+        const eventsWithParsedSchedule = events.map((event) => ({
+            ...event,
+            schedule: event.schedule ? JSON.parse(event.schedule) : [],
+        }));
+
+        return NextResponse.json({ events: eventsWithParsedSchedule });
     } catch (error) {
         console.error("Error fetching events:", error);
         return NextResponse.json(
@@ -46,7 +57,23 @@ export async function POST(request: NextRequest) {
         }
 
         const body = await request.json();
-        const { date, year, title, description, status, icon, order } = body;
+        const { 
+            date, 
+            year, 
+            title, 
+            description, 
+            status, 
+            icon, 
+            order,
+            fullDescription,
+            location,
+            time,
+            ticketPrice,
+            maxTickets,
+            hasTickets,
+            schedule,
+            instructions,
+        } = body;
 
         if (!date || !year || !title || !description) {
             return NextResponse.json(
@@ -64,10 +91,26 @@ export async function POST(request: NextRequest) {
                 status: status || "upcoming",
                 icon: icon || "📅",
                 order: order || 0,
+                fullDescription: fullDescription || null,
+                location: location || null,
+                time: time || null,
+                ticketPrice: ticketPrice ? parseFloat(ticketPrice) : null,
+                maxTickets: maxTickets ? parseInt(maxTickets) : null,
+                hasTickets: hasTickets || false,
+                schedule: schedule ? JSON.stringify(schedule) : null,
+                instructions: instructions || null,
+            },
+            include: {
+                images: true,
             },
         });
 
-        return NextResponse.json({ event }, { status: 201 });
+        return NextResponse.json({ 
+            event: {
+                ...event,
+                schedule: event.schedule ? JSON.parse(event.schedule) : [],
+            }
+        }, { status: 201 });
     } catch (error) {
         console.error("Error creating event:", error);
         return NextResponse.json(

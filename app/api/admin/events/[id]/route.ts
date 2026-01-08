@@ -58,7 +58,24 @@ export async function PUT(
 
         const { id } = await params;
         const body = await request.json();
-        const { date, year, title, description, status, icon, order, isActive } = body;
+        const { 
+            date, 
+            year, 
+            title, 
+            description, 
+            status, 
+            icon, 
+            order, 
+            isActive,
+            fullDescription,
+            location,
+            time,
+            ticketPrice,
+            maxTickets,
+            hasTickets,
+            schedule,
+            instructions,
+        } = body;
 
         const event = await prisma.event.update({
             where: { id },
@@ -71,10 +88,28 @@ export async function PUT(
                 ...(icon && { icon }),
                 ...(order !== undefined && { order }),
                 ...(isActive !== undefined && { isActive }),
+                ...(fullDescription !== undefined && { fullDescription: fullDescription || null }),
+                ...(location !== undefined && { location: location || null }),
+                ...(time !== undefined && { time: time || null }),
+                ...(ticketPrice !== undefined && { ticketPrice: ticketPrice ? parseFloat(ticketPrice) : null }),
+                ...(maxTickets !== undefined && { maxTickets: maxTickets ? parseInt(maxTickets) : null }),
+                ...(hasTickets !== undefined && { hasTickets }),
+                ...(schedule !== undefined && { schedule: schedule ? JSON.stringify(schedule) : null }),
+                ...(instructions !== undefined && { instructions: instructions || null }),
+            },
+            include: {
+                images: {
+                    orderBy: { order: "asc" },
+                },
             },
         });
 
-        return NextResponse.json({ event });
+        return NextResponse.json({ 
+            event: {
+                ...event,
+                schedule: event.schedule ? JSON.parse(event.schedule) : [],
+            }
+        });
     } catch (error) {
         console.error("Error updating event:", error);
         return NextResponse.json(
@@ -99,6 +134,17 @@ export async function DELETE(
         }
 
         const { id } = await params;
+
+        // Delete associated images from Cloudinary first
+        const eventImages = await prisma.eventImage.findMany({
+            where: { eventId: id },
+        });
+
+        // Import cloudinary for deletion
+        const { deleteImage } = await import("@/lib/cloudinary");
+        for (const image of eventImages) {
+            await deleteImage(image.publicId);
+        }
 
         await prisma.event.delete({
             where: { id },

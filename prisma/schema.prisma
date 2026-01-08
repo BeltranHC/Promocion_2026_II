@@ -39,8 +39,39 @@ model Event {
   icon        String   @default("📅")
   order       Int      @default(0)
   isActive    Boolean  @default(true)
+  
+  // Nuevos campos para detalle del evento
+  fullDescription String?  @db.Text  // Descripción completa/detallada
+  location        String?            // Lugar del evento
+  time            String?            // Hora del evento
+  ticketPrice     Float?             // Precio de entrada (null = gratis)
+  maxTickets      Int?               // Máximo de entradas disponibles
+  hasTickets      Boolean  @default(false) // Si el evento tiene venta de entradas
+  
+  // Cronograma del evento (JSON array)
+  schedule        String?  @db.Text  // JSON: [{ time: "18:00", activity: "Apertura" }]
+  
+  // Indicaciones/notas adicionales
+  instructions    String?  @db.Text  // Indicaciones para asistentes
+  
+  // Imágenes del evento
+  images          EventImage[]
+  
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model EventImage {
+  id        String   @id @default(cuid())
+  eventId   String
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  url       String   // Cloudinary URL
+  publicId  String   // Cloudinary public_id
+  caption   String?  // Descripción de la imagen
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([eventId])
 }
 
 // ============================================
