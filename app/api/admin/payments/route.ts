@@ -1,18 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 
-// Número máximo de semanas registradas (del CSV: 8 sept 2025 al 29 dic 2025)
-const MAX_WEEKS = 17;
-
-// Calcular semanas transcurridas desde la fecha de inicio
-function getWeeksSinceStart(startDate: Date): number {
-    const now = new Date();
-    const diffTime = now.getTime() - startDate.getTime();
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    // Limitar a MAX_WEEKS para no exceder las semanas del período de aportes
-    return Math.min(MAX_WEEKS, Math.max(1, Math.floor(diffDays / 7) + 1));
-}
-
 // GET: Lista todos los estudiantes con su estado de aportes
 export async function GET() {
     try {
@@ -20,7 +8,7 @@ export async function GET() {
             where: { isActive: true },
             include: {
                 payments: {
-                    orderBy: { weekNumber: "desc" },
+                    orderBy: { weekNumber: "asc" },
                 },
             },
             orderBy: { name: "asc" },
@@ -33,21 +21,35 @@ export async function GET() {
 
         const weeklyAmount = fundSettings?.weeklyAmount || 5;
         const lateFee = 7; // Penalidad por semana no pagada
-        const startDate = fundSettings?.startDate || new Date("2025-09-08");
-        const currentWeek = getWeeksSinceStart(startDate);
+        const maxWeeks = fundSettings?.maxWeeks || 17;
 
         // Calcular estadísticas
         let totalCollected = 0;
         let studentsUpToDate = 0;
+        let totalDebt = 0;
 
         const studentsWithStats = students.map((student) => {
-            const totalPaid = student.payments.reduce((sum, p) => sum + p.amount, 0);
-            const weeksPaid = student.payments.length;
-            const weeksPending = Math.max(0, currentWeek - weeksPaid);
+            // Solo contar como "pagado" las semanas con monto > 0
+            const paidPayments = student.payments.filter(p => p.amount > 0);
+            const totalPaid = paidPayments.reduce((sum, p) => sum + p.amount, 0);
+            
+            // Obtener el set de semanas que el estudiante ha cubierto (pagadas con monto > 0)
+            const weeksPaidSet = new Set(paidPayments.map(p => p.weekNumber));
+            const weeksPaid = weeksPaidSet.size;
+            
+            // Calcular semanas pendientes (semanas que no están en el set de pagadas)
+            let weeksPending = 0;
+            for (let week = 1; week <= maxWeeks; week++) {
+                if (!weeksPaidSet.has(week)) {
+                    weeksPending++;
+                }
+            }
+            
             // Deuda: 7 soles por cada semana no pagada
             const amountOwed = weeksPending * lateFee;
 
             totalCollected += totalPaid;
+            totalDebt += amountOwed;
             if (weeksPending === 0) studentsUpToDate++;
 
             return {
@@ -59,18 +61,27 @@ export async function GET() {
                 weeksPending,
                 amountOwed,
                 isUpToDate: weeksPending === 0,
-                lastPayment: student.payments[0] || null,
+                lastPayment: paidPayments.length > 0 ? paidPayments[paidPayments.length - 1] : null,
+                payments: student.payments, // Incluir todos los pagos para historial
             };
         });
+        
+        // Ordenar para ranking de deudores
+        const debtRanking = [...studentsWithStats]
+            .filter(s => s.amountOwed > 0)
+            .sort((a, b) => b.amountOwed - a.amountOwed)
+            .slice(0, 10);
 
         return NextResponse.json({
             students: studentsWithStats,
+            debtRanking,
             stats: {
                 totalStudents: students.length,
                 studentsUpToDate,
                 studentsPending: students.length - studentsUpToDate,
                 totalCollected,
-                currentWeek,
+                totalDebt,
+                maxWeeks,
                 weeklyAmount,
                 goal: fundSettings?.goal || 5000,
             },

@@ -82,6 +82,7 @@ model FundSettings {
   goal                Float    @default(5000)
   weeklyAmount        Float    @default(5)
   totalMembers        Int      @default(50)
+  maxWeeks            Int      @default(17)  // Número máximo de semanas de aportes
   startDate           DateTime @default(now()) // Fecha inicio de aportes
   updatedAt           DateTime @updatedAt
 }

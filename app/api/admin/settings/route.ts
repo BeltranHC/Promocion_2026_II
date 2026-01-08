@@ -69,18 +69,16 @@ export async function PUT(request: NextRequest) {
                 where: { id: "main" },
                 update: {
                     ...(fundSettings.goal !== undefined && { goal: parseFloat(fundSettings.goal) }),
-                    ...(fundSettings.collected !== undefined && { collected: parseFloat(fundSettings.collected) }),
                     ...(fundSettings.weeklyAmount !== undefined && { weeklyAmount: parseFloat(fundSettings.weeklyAmount) }),
                     ...(fundSettings.totalMembers !== undefined && { totalMembers: parseInt(fundSettings.totalMembers) }),
-                    ...(fundSettings.contributingMembers !== undefined && { contributingMembers: parseInt(fundSettings.contributingMembers) }),
+                    ...(fundSettings.maxWeeks !== undefined && { maxWeeks: parseInt(fundSettings.maxWeeks) }),
                 },
                 create: {
                     id: "main",
                     goal: parseFloat(fundSettings.goal) || 5000,
-                    collected: parseFloat(fundSettings.collected) || 0,
                     weeklyAmount: parseFloat(fundSettings.weeklyAmount) || 5,
                     totalMembers: parseInt(fundSettings.totalMembers) || 50,
-                    contributingMembers: parseInt(fundSettings.contributingMembers) || 0,
+                    maxWeeks: parseInt(fundSettings.maxWeeks) || 17,
                 },
             });
         }

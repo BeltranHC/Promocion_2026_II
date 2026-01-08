@@ -179,14 +179,15 @@ async function main() {
 
         for (let weekIndex = 0; weekIndex < payments.length; weekIndex++) {
             const amount = payments[weekIndex];
-            // Si hay un pago (5 o 7), registrarlo. Si es 0, también registrar (exonerado)
-            // Si es null, no registrar (no pagado)
-            if (amount !== null) {
+            // Solo registrar pagos con monto > 0 (5 o 7)
+            // Los pagos con monto 0 ya no se registran (se consideran como no pagados)
+            // Los null tampoco se registran (no pagó)
+            if (amount !== null && amount > 0) {
                 await prisma.payment.create({
                     data: {
                         studentId,
                         weekNumber: weekIndex + 1,
-                        amount: amount, // 0 = exonerado, 5 = normal, 7 = tardío
+                        amount: amount, // 5 = normal, 7 = tardío
                         paidAt: new Date(WEEK_DATES[weekIndex]),
                     },
                 });
