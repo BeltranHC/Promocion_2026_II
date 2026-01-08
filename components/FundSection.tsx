@@ -235,13 +235,13 @@ export default function FundSection() {
                 />
 
                 {/* Search Section */}
-                <AnimateOnScroll animation="fade-in-up" className="mb-8">
-                    <div className="glass rounded-2xl p-6 border border-una-gold/10">
+                <AnimateOnScroll animation="fade-in-up" className="mb-8 relative z-20">
+                    <div className="glass rounded-2xl p-6 border border-una-gold/10 relative">
                         <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
                             <Search size={20} className="text-una-gold" />
                             Consulta tu Estado de Aportes
                         </h3>
-                        <div className="relative">
+                        <div className="relative z-30">
                             <input
                                 type="text"
                                 value={searchQuery}
