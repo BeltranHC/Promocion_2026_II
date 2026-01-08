@@ -12,9 +12,110 @@ datasource db {
   provider = "postgresql"
 }
 
-// Modelo de prueba para verificar la conexión
-model Test {
-  id        Int      @id @default(autoincrement())
+// ============================================
+// ADMIN & AUTH
+// ============================================
+
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String   // Hashed with bcrypt
   name      String
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ============================================
+// EVENTS
+// ============================================
+
+model Event {
+  id          String   @id @default(cuid())
+  date        String   // e.g., "15 Mar"
+  year        String   // e.g., "2026"
+  title       String
+  description String   @db.Text
+  status      String   @default("upcoming") // "upcoming" | "past"
+  icon        String   @default("📅")
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ============================================
+// GALLERY
+// ============================================
+
+model GalleryImage {
+  id          String   @id @default(cuid())
+  url         String   // Cloudinary URL
+  publicId    String   // Cloudinary public_id for deletion
+  category    String   // "campus" | "friends" | "events"
+  label       String
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ============================================
+// PAYMENTS & FUND
+// ============================================
+
+model Payment {
+  id          String   @id @default(cuid())
+  studentId   String
+  student     Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  amount      Float    @default(5)  // Monto del pago (S/.)
+  weekNumber  Int      // Número de semana del aporte
+  paidAt      DateTime // Fecha en que pagó
+  notes       String?  // Notas opcionales
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([studentId])
+}
+
+model FundSettings {
+  id                  String   @id @default("main")
+  goal                Float    @default(5000)
+  weeklyAmount        Float    @default(5)
+  totalMembers        Int      @default(50)
+  startDate           DateTime @default(now()) // Fecha inicio de aportes
+  updatedAt           DateTime @updatedAt
+}
+
+// ============================================
+// GENERAL SETTINGS
+// ============================================
+
+model SiteSettings {
+  id              String @id @default("main")
+  promotionName   String @default("Promoción 2026 - II")
+  schoolName      String @default("EPIEI - UNA Puno")
+  contactEmail    String @default("")
+  instagramUrl    String @default("")
+  facebookUrl     String @default("")
+  whatsappNumber  String @default("")
+  updatedAt       DateTime @updatedAt
+}
+
+// ============================================
+// STUDENTS / MEMBERS
+// ============================================
+
+model Student {
+  id          String    @id @default(cuid())
+  name        String    // Nombre completo
+  nickname    String?   // Apodo (opcional)
+  description String?   @db.Text // Breve descripción
+  quote       String?   // Frase característica
+  photoUrl    String?   // URL de Cloudinary (null = placeholder)
+  photoId     String?   // Cloudinary public_id para eliminación
+  order       Int       @default(0)
+  isActive    Boolean   @default(true)
+  payments    Payment[] // Historial de pagos
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
