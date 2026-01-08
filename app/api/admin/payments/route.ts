@@ -72,9 +72,25 @@ export async function GET() {
             .sort((a, b) => b.amountOwed - a.amountOwed)
             .slice(0, 10);
 
+        // Calcular totales por semana
+        const weeklyTotals: { week: number; total: number; paidCount: number }[] = [];
+        for (let week = 1; week <= maxWeeks; week++) {
+            let weekTotal = 0;
+            let paidCount = 0;
+            students.forEach(student => {
+                const payment = student.payments.find(p => p.weekNumber === week && p.amount > 0);
+                if (payment) {
+                    weekTotal += payment.amount;
+                    paidCount++;
+                }
+            });
+            weeklyTotals.push({ week, total: weekTotal, paidCount });
+        }
+
         return NextResponse.json({
             students: studentsWithStats,
             debtRanking,
+            weeklyTotals,
             stats: {
                 totalStudents: students.length,
                 studentsUpToDate,

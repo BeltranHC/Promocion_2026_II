@@ -17,6 +17,7 @@ import {
     TrendingDown,
     History,
     Settings,
+    BarChart3,
 } from "lucide-react";
 
 interface Payment {
@@ -47,6 +48,12 @@ interface DebtRanking {
     weeksPending: number;
 }
 
+interface WeeklyTotal {
+    week: number;
+    total: number;
+    paidCount: number;
+}
+
 interface Stats {
     totalStudents: number;
     studentsUpToDate: number;
@@ -57,7 +64,6 @@ interface Stats {
     weeklyAmount: number;
     goal: number;
 }
-
 // Modal Component
 function Modal({
     isOpen,
@@ -700,6 +706,240 @@ function DebtRankingCard({ ranking }: { ranking: DebtRanking[] }) {
     );
 }
 
+// Weekly Totals Component
+function WeeklyTotalsCard({ 
+    weeklyTotals, 
+    totalStudents,
+    students,
+    onWeekClick,
+}: { 
+    weeklyTotals: WeeklyTotal[]; 
+    totalStudents: number;
+    students: StudentWithPayments[];
+    onWeekClick: (week: number, unpaidStudents: StudentWithPayments[], paidStudents: StudentWithPayments[]) => void;
+}) {
+    const [isExpanded, setIsExpanded] = useState(false);
+    const displayedWeeks = isExpanded ? weeklyTotals : weeklyTotals.slice(0, 6);
+    const grandTotal = weeklyTotals.reduce((sum, w) => sum + w.total, 0);
+
+    const handleWeekClick = (weekNumber: number) => {
+        const unpaid: StudentWithPayments[] = [];
+        const paid: StudentWithPayments[] = [];
+        
+        students.forEach(student => {
+            const payment = student.payments.find(p => p.weekNumber === weekNumber && p.amount > 0);
+            if (payment) {
+                paid.push(student);
+            } else {
+                unpaid.push(student);
+            }
+        });
+        
+        onWeekClick(weekNumber, unpaid, paid);
+    };
+
+    return (
+        <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+            <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 rounded-lg bg-emerald-500/20">
+                    <BarChart3 size={20} className="text-emerald-400" />
+                </div>
+                <h3 className="text-lg font-semibold text-white">Total por Semana</h3>
+            </div>
+            
+            <div className="space-y-2">
+                {displayedWeeks.map((week) => {
+                    const percentage = totalStudents > 0 ? (week.paidCount / totalStudents) * 100 : 0;
+                    const unpaidCount = totalStudents - week.paidCount;
+                    return (
+                        <button
+                            key={week.week}
+                            onClick={() => handleWeekClick(week.week)}
+                            className="w-full p-3 bg-slate-800/50 rounded-lg hover:bg-slate-800 transition-colors text-left"
+                        >
+                            <div className="flex items-center justify-between mb-1">
+                                <span className="text-slate-300 text-sm font-medium">
+                                    Semana {week.week}
+                                </span>
+                                <span className="text-emerald-400 font-bold text-sm">
+                                    S/. {week.total.toFixed(2)}
+                                </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <div className="flex-1 h-2 bg-slate-700 rounded-full overflow-hidden">
+                                    <div 
+                                        className="h-full bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full transition-all"
+                                        style={{ width: `${percentage}%` }}
+                                    />
+                                </div>
+                                <span className="text-xs text-slate-500 w-16 text-right">
+                                    {week.paidCount}/{totalStudents}
+                                </span>
+                            </div>
+                            {unpaidCount > 0 && (
+                                <p className="text-xs text-red-400 mt-1">
+                                    {unpaidCount} sin pagar
+                                </p>
+                            )}
+                        </button>
+                    );
+                })}
+            </div>
+
+            {weeklyTotals.length > 6 && (
+                <button
+                    onClick={() => setIsExpanded(!isExpanded)}
+                    className="w-full mt-3 py-2 text-sm text-amber-400 hover:text-amber-300 transition-colors"
+                >
+                    {isExpanded ? "Ver menos" : `Ver todas (${weeklyTotals.length} semanas)`}
+                </button>
+            )}
+
+            <div className="mt-4 pt-4 border-t border-slate-700">
+                <div className="flex items-center justify-between">
+                    <span className="text-slate-400 font-medium">Total General</span>
+                    <span className="text-emerald-400 font-bold text-lg">S/. {grandTotal.toFixed(2)}</span>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+// Week Detail Modal Content
+function WeekDetailContent({
+    weekNumber,
+    unpaidStudents,
+    paidStudents,
+    onAddPayment,
+}: {
+    weekNumber: number;
+    unpaidStudents: StudentWithPayments[];
+    paidStudents: StudentWithPayments[];
+    onAddPayment: (studentId: string, weekNumber: number) => void;
+}) {
+    const [activeTab, setActiveTab] = useState<"unpaid" | "paid">("unpaid");
+
+    return (
+        <div className="space-y-4">
+            {/* Stats */}
+            <div className="grid grid-cols-2 gap-4">
+                <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 text-center">
+                    <p className="text-red-400 text-2xl font-bold">{unpaidStudents.length}</p>
+                    <p className="text-slate-400 text-sm">Sin pagar</p>
+                </div>
+                <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-4 text-center">
+                    <p className="text-emerald-400 text-2xl font-bold">{paidStudents.length}</p>
+                    <p className="text-slate-400 text-sm">Pagaron</p>
+                </div>
+            </div>
+
+            {/* Tabs */}
+            <div className="flex gap-2 border-b border-slate-700 pb-2">
+                <button
+                    onClick={() => setActiveTab("unpaid")}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                        activeTab === "unpaid"
+                            ? "bg-red-500/20 text-red-400"
+                            : "text-slate-400 hover:text-white"
+                    }`}
+                >
+                    Sin Pagar ({unpaidStudents.length})
+                </button>
+                <button
+                    onClick={() => setActiveTab("paid")}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                        activeTab === "paid"
+                            ? "bg-emerald-500/20 text-emerald-400"
+                            : "text-slate-400 hover:text-white"
+                    }`}
+                >
+                    Pagaron ({paidStudents.length})
+                </button>
+            </div>
+
+            {/* List */}
+            <div className="max-h-80 overflow-y-auto space-y-2">
+                {activeTab === "unpaid" ? (
+                    unpaidStudents.length === 0 ? (
+                        <p className="text-center text-slate-400 py-4">¡Todos pagaron esta semana! 🎉</p>
+                    ) : (
+                        unpaidStudents.map((student) => (
+                            <div
+                                key={student.id}
+                                className="flex items-center justify-between p-3 bg-red-500/10 border border-red-500/20 rounded-lg"
+                            >
+                                <div className="flex items-center gap-3">
+                                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-500 to-red-600 flex items-center justify-center text-xs font-bold">
+                                        {student.photoUrl ? (
+                                            <img
+                                                src={student.photoUrl}
+                                                alt={student.name}
+                                                className="w-full h-full rounded-full object-cover"
+                                            />
+                                        ) : (
+                                            student.name.charAt(0)
+                                        )}
+                                    </div>
+                                    <div>
+                                        <p className="text-white text-sm font-medium">{student.name}</p>
+                                        <p className="text-xs text-slate-500">Deuda total: S/.{student.amountOwed}</p>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={() => onAddPayment(student.id, weekNumber)}
+                                    className="p-2 text-emerald-400 hover:bg-emerald-500/20 rounded-lg transition-colors"
+                                    title="Registrar pago"
+                                >
+                                    <Plus size={16} />
+                                </button>
+                            </div>
+                        ))
+                    )
+                ) : (
+                    paidStudents.length === 0 ? (
+                        <p className="text-center text-slate-400 py-4">Nadie ha pagado esta semana aún</p>
+                    ) : (
+                        paidStudents.map((student) => {
+                            const payment = student.payments.find(p => p.weekNumber === weekNumber);
+                            return (
+                                <div
+                                    key={student.id}
+                                    className="flex items-center justify-between p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-lg"
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-500 to-red-600 flex items-center justify-center text-xs font-bold">
+                                            {student.photoUrl ? (
+                                                <img
+                                                    src={student.photoUrl}
+                                                    alt={student.name}
+                                                    className="w-full h-full rounded-full object-cover"
+                                                />
+                                            ) : (
+                                                student.name.charAt(0)
+                                            )}
+                                        </div>
+                                        <div>
+                                            <p className="text-white text-sm font-medium">{student.name}</p>
+                                            {payment && (
+                                                <p className="text-xs text-slate-500">
+                                                    {new Date(payment.paidAt).toLocaleDateString("es-PE")}
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <span className="text-emerald-400 font-bold text-sm">
+                                        S/. {payment?.amount.toFixed(2) || "0.00"}
+                                    </span>
+                                </div>
+                            );
+                        })
+                    )
+                )}
+            </div>
+        </div>
+    );
+}
+
 // Student Row Component
 function StudentRow({
     student,
@@ -833,6 +1073,7 @@ function MaxWeeksSettingsForm({
 export default function AdminContributorsPage() {
     const [students, setStudents] = useState<StudentWithPayments[]>([]);
     const [debtRanking, setDebtRanking] = useState<DebtRanking[]>([]);
+    const [weeklyTotals, setWeeklyTotals] = useState<WeeklyTotal[]>([]);
     const [stats, setStats] = useState<Stats | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
@@ -841,6 +1082,12 @@ export default function AdminContributorsPage() {
     const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+    const [isWeekDetailModalOpen, setIsWeekDetailModalOpen] = useState(false);
+    const [selectedWeekData, setSelectedWeekData] = useState<{
+        week: number;
+        unpaid: StudentWithPayments[];
+        paid: StudentWithPayments[];
+    } | null>(null);
     const [selectedStudent, setSelectedStudent] = useState<StudentWithPayments | null>(null);
     const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
     const [quickAddData, setQuickAddData] = useState<{ studentId: string; weekNumber: number } | null>(null);
@@ -853,6 +1100,7 @@ export default function AdminContributorsPage() {
             const data = await res.json();
             setStudents(data.students || []);
             setDebtRanking(data.debtRanking || []);
+            setWeeklyTotals(data.weeklyTotals || []);
             setStats(data.stats || null);
         } catch (error) {
             console.error("Error fetching data:", error);
@@ -991,6 +1239,16 @@ export default function AdminContributorsPage() {
         } finally {
             setIsSaving(false);
         }
+    };
+
+    const handleWeekClick = (week: number, unpaid: StudentWithPayments[], paid: StudentWithPayments[]) => {
+        setSelectedWeekData({ week, unpaid, paid });
+        setIsWeekDetailModalOpen(true);
+    };
+
+    const handleAddPaymentFromWeekDetail = (studentId: string, weekNumber: number) => {
+        setQuickAddData({ studentId, weekNumber });
+        setIsWeekDetailModalOpen(false);
     };
 
     return (
@@ -1177,9 +1435,15 @@ export default function AdminContributorsPage() {
                         )}
                     </div>
 
-                    {/* Sidebar - Debt Ranking */}
-                    <div className="lg:col-span-1">
+                    {/* Sidebar - Rankings & Weekly Totals */}
+                    <div className="lg:col-span-1 space-y-6">
                         <DebtRankingCard ranking={debtRanking} />
+                        <WeeklyTotalsCard 
+                            weeklyTotals={weeklyTotals} 
+                            totalStudents={stats?.totalStudents || 0}
+                            students={students}
+                            onWeekClick={handleWeekClick}
+                        />
                     </div>
                 </div>
             </div>
@@ -1285,6 +1549,26 @@ export default function AdminContributorsPage() {
                     onCancel={() => setIsSettingsModalOpen(false)}
                     isLoading={isSaving}
                 />
+            </Modal>
+
+            {/* Week Detail Modal */}
+            <Modal
+                isOpen={isWeekDetailModalOpen}
+                onClose={() => {
+                    setIsWeekDetailModalOpen(false);
+                    setSelectedWeekData(null);
+                }}
+                title={`Semana ${selectedWeekData?.week || ""} - Detalle de Pagos`}
+                size="lg"
+            >
+                {selectedWeekData && (
+                    <WeekDetailContent
+                        weekNumber={selectedWeekData.week}
+                        unpaidStudents={selectedWeekData.unpaid}
+                        paidStudents={selectedWeekData.paid}
+                        onAddPayment={handleAddPaymentFromWeekDetail}
+                    />
+                )}
             </Modal>
         </div>
     );
