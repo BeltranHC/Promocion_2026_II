@@ -416,7 +416,7 @@ npm start
  ╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝     ╚═╝ ╚═════╝      ╚══════╝ ╚═════╝ ╚══════╝ ╚═════╝ 
 ```
 
-**Desarrollado con 💜 por [Juni Dev](https://github.com/junidev)**
+**Desarrollado con 💜 por [Juni Dev](https://beltranhc.github.io/portafolio/)**
 
 **© 2026 Promoción 2026 - EPIEI - Universidad Nacional del Altiplano - Puno**
 
@@ -446,7 +446,7 @@ copies of the Software...
 
 <div align="center">
 
-**Hecho con ❤️ y ☕ por [Juni Dev](https://github.com/junidev) para la Promoción 2026**
+**Hecho con ❤️ y ☕ por [Juni Dev]([https://github.com/junidev](https://beltranhc.github.io/portafolio/)) para la Promoción 2026**
 
 <img src="https://komarev.com/ghpvc/?username=promocion2026&label=Visitas%20al%20Repo&color=6366F1&style=for-the-badge" alt="Profile Views"/>
 
