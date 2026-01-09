@@ -356,7 +356,7 @@ npm start
 
 ### 👨‍💻 Desarrollador Principal
 
-<a href="https://github.com/junidev">
+<a href="https://beltranhc.github.io/portafolio/">
   <img src="https://img.shields.io/badge/Desarrollado%20por-Juni%20Dev-6366F1?style=for-the-badge&logo=github&logoColor=white"/>
 </a>
 
@@ -364,13 +364,13 @@ npm start
 
 | Rol | Nombre | Contribución |
 |:---:|:------:|:------------:|
-| 🚀 **Lead Developer** | **Juni Dev** | Arquitectura, Frontend, Backend & DevOps |
+| 🚀 **Lead Developer** | **[Juni Dev](https://beltranhc.github.io/portafolio/)** | Arquitectura, Frontend, Backend & DevOps |
 | 🎓 **Proyecto** | Promoción 2026 | EPIEI - UNA Puno |
 
 <br/>
 
-[![GitHub](https://img.shields.io/badge/GitHub-Juni%20Dev-181717?style=for-the-badge&logo=github)](https://github.com/junidev)
-[![Portfolio](https://img.shields.io/badge/Portfolio-Juni%20Dev-6366F1?style=for-the-badge&logo=vercel&logoColor=white)](https://junidev.vercel.app)
+[![GitHub](https://img.shields.io/badge/GitHub-beltranhc-181717?style=for-the-badge&logo=github)](https://github.com/beltranhc)
+[![Portfolio](https://img.shields.io/badge/Portfolio-Juni%20Dev-6366F1?style=for-the-badge&logo=vercel&logoColor=white)](https://beltranhc.github.io/portafolio/)
 
 </div>
 
@@ -446,7 +446,7 @@ copies of the Software...
 
 <div align="center">
 
-**Hecho con ❤️ y ☕ por [Juni Dev]([https://github.com/junidev](https://beltranhc.github.io/portafolio/)) para la Promoción 2026**
+**Hecho con ❤️ y ☕ por [Juni Dev](https://beltranhc.github.io/portafolio/) para la Promoción 2026**
 
 <img src="https://komarev.com/ghpvc/?username=promocion2026&label=Visitas%20al%20Repo&color=6366F1&style=for-the-badge" alt="Profile Views"/>
 
