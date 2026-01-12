@@ -2,8 +2,6 @@ import type {
     NavLink,
     Event,
     InfoCard,
-    FundData,
-    Contributor,
     GalleryImage,
     Category,
     Stat
@@ -91,23 +89,6 @@ export const STATS: Stat[] = [
     { value: '∞', label: 'Recuerdos' },
 ];
 
-// Fund Data (Mock - to be replaced with real data from backend)
-export const FUND_DATA: FundData = {
-    goal: 5000,
-    collected: 1250,
-    weeklyAmount: 5,
-    totalMembers: 50,
-    contributingMembers: 25,
-};
-
-// Recent Contributors (Mock)
-export const RECENT_CONTRIBUTORS: Contributor[] = [
-    { name: 'Juan P.', amount: 20, weeks: 4 },
-    { name: 'María G.', amount: 15, weeks: 3 },
-    { name: 'Carlos R.', amount: 25, weeks: 5 },
-    { name: 'Ana M.', amount: 10, weeks: 2 },
-    { name: 'Luis S.', amount: 20, weeks: 4 },
-];
 
 // Gallery Images (Placeholder)
 export const GALLERY_IMAGES: GalleryImage[] = [

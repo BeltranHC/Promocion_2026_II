@@ -51,20 +51,7 @@ export interface InfoCard {
     gradient: string;
 }
 
-// Types for fund section
-export interface FundData {
-    goal: number;
-    collected: number;
-    weeklyAmount: number;
-    totalMembers: number;
-    contributingMembers: number;
-}
 
-export interface Contributor {
-    name: string;
-    amount: number;
-    weeks: number;
-}
 
 // Types for gallery
 export interface GalleryImage {
