@@ -30,7 +30,7 @@ export interface Event {
     icon: string;
     order?: number;
     isActive?: boolean;
-    
+
     // Campos detallados
     fullDescription?: string;
     location?: string;
@@ -83,4 +83,40 @@ export interface Category {
 export interface Stat {
     value: string;
     label: string;
+}
+
+// Types for contribution system
+export interface Payment {
+    id: string;
+    weekNumber: number;
+    amount: number;
+    paidAt: string;
+}
+
+export interface StudentResult {
+    id: string;
+    name: string;
+    photoUrl: string | null;
+    totalPaid: number;
+    weeksPaid: number;
+    weeksPending: number;
+    amountOwed: number;
+    currentWeek: number;
+    weeklyAmount: number;
+    isUpToDate: boolean;
+    payments: Payment[];
+}
+
+export interface FundStats {
+    totalStudents: number;
+    studentsUpToDate: number;
+    studentsPending: number;
+    totalCollected: number;
+    currentWeek: number;
+    weeklyAmount: number;
+    goal: number;
+}
+
+export interface ProgressBarProps {
+    percentage: number;
 }

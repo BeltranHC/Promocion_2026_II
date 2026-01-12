@@ -4,41 +4,7 @@ import { useState, useEffect } from "react";
 import AnimateOnScroll from "./AnimateOnScroll";
 import SectionHeader from "./ui/SectionHeader";
 import { Search, User, Calendar, CreditCard, CheckCircle, AlertCircle, X } from "lucide-react";
-
-interface Payment {
-    id: string;
-    weekNumber: number;
-    amount: number;
-    paidAt: string;
-}
-
-interface StudentResult {
-    id: string;
-    name: string;
-    photoUrl: string | null;
-    totalPaid: number;
-    weeksPaid: number;
-    weeksPending: number;
-    amountOwed: number;
-    currentWeek: number;
-    weeklyAmount: number;
-    isUpToDate: boolean;
-    payments: Payment[];
-}
-
-interface FundStats {
-    totalStudents: number;
-    studentsUpToDate: number;
-    studentsPending: number;
-    totalCollected: number;
-    currentWeek: number;
-    weeklyAmount: number;
-    goal: number;
-}
-
-interface ProgressBarProps {
-    percentage: number;
-}
+import type { Payment, StudentResult, FundStats, ProgressBarProps } from "@/types";
 
 function ProgressBar({ percentage }: ProgressBarProps) {
     const [width, setWidth] = useState(0);
