@@ -4,11 +4,22 @@ import AnimateOnScroll from "../AnimateOnScroll";
 import { Calendar, CreditCard, CheckCircle, AlertCircle, X } from "lucide-react";
 import type { StudentResult } from "@/types";
 
+/** Props del componente StudentContributionCard */
 interface StudentContributionCardProps {
+    /** Información completa del estudiante incluyendo pagos y estado */
     student: StudentResult;
+    /** Callback para cerrar la tarjeta */
     onClose: () => void;
 }
 
+/**
+ * Tarjeta expandible que muestra el estado de aportes de un estudiante.
+ * Incluye información de pagos, semanas pendientes, estado actual y historial.
+ * 
+ * @param student - Datos del estudiante con información de pagos
+ * @param onClose - Función para cerrar la tarjeta
+ * @returns Tarjeta animada con información de contribuciones
+ */
 export default function StudentContributionCard({ student, onClose }: StudentContributionCardProps) {
     return (
         <AnimateOnScroll animation="fade-in-up">

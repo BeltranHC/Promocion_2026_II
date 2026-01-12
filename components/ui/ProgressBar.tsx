@@ -3,6 +3,13 @@
 import { useState, useEffect } from "react";
 import type { ProgressBarProps } from "@/types";
 
+/**
+ * Barra de progreso animada con gradiente institucional UNA-Puno.
+ * Muestra el porcentaje de avance con una animación suave de expansión.
+ * 
+ * @param percentage - Porcentaje de progreso (0-100)
+ * @returns Componente de barra de progreso con animación
+ */
 export default function ProgressBar({ percentage }: ProgressBarProps) {
     const [width, setWidth] = useState(0);
 
