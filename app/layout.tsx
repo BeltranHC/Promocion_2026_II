@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import LayoutWrapper from "@/components/LayoutWrapper";
+import { Toaster } from "sonner";
 
 const spaceGrotesk = Space_Grotesk({
     subsets: ["latin"],
@@ -29,6 +30,19 @@ export default function RootLayout({
         <html lang="es" className="scroll-smooth">
             <body className={`${spaceGrotesk.variable} font-sans antialiased`}>
                 <LayoutWrapper>{children}</LayoutWrapper>
+                <Toaster 
+                    position="top-right"
+                    richColors
+                    closeButton
+                    duration={4000}
+                    toastOptions={{
+                        style: {
+                            background: "rgb(15 23 42)",
+                            border: "1px solid rgb(51 65 85)",
+                            color: "white",
+                        },
+                    }}
+                />
             </body>
         </html>
     );
