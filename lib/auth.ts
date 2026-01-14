@@ -1,8 +1,14 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-key-change-in-production';
+// JWT_SECRET debe estar definido en las variables de entorno
+const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRES_IN = '7d';
+
+// Validar que JWT_SECRET esté configurado
+if (!JWT_SECRET) {
+    throw new Error('JWT_SECRET environment variable is not defined. Please set it in your .env file.');
+}
 
 export interface JWTPayload {
     adminId: string;
