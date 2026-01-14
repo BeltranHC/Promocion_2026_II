@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { verifyAdmin } from "@/lib/adminAuth";
 import { uploadImage } from "@/lib/cloudinary";
+import { createStudentSchema, validateData } from "@/lib/validators";
 
 // GET - List all students
 export async function GET(request: NextRequest) {
@@ -36,18 +37,24 @@ export async function POST(request: NextRequest) {
         }
 
         const formData = await request.formData();
-        const name = formData.get("name") as string;
-        const nickname = formData.get("nickname") as string | null;
-        const description = formData.get("description") as string | null;
-        const quote = formData.get("quote") as string | null;
+        const rawData = {
+            name: formData.get("name") as string,
+            nickname: formData.get("nickname") as string | null,
+            description: formData.get("description") as string | null,
+            quote: formData.get("quote") as string | null,
+        };
         const file = formData.get("photo") as File | null;
 
-        if (!name) {
+        // Validate with Zod
+        const validation = validateData(createStudentSchema, rawData);
+        if (!validation.success) {
             return NextResponse.json(
-                { error: "El nombre es requerido" },
+                { error: validation.error },
                 { status: 400 }
             );
         }
+
+        const { name, nickname, description, quote } = validation.data;
 
         let photoUrl: string | null = null;
         let photoId: string | null = null;

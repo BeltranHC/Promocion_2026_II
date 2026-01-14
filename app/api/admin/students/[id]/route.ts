@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { verifyAdmin } from "@/lib/adminAuth";
 import { uploadImage, deleteImage } from "@/lib/cloudinary";
+import { updateStudentSchema, validateData } from "@/lib/validators";
 
 // GET - Get single student
 export async function GET(
@@ -49,12 +50,25 @@ export async function PUT(
         const { id } = await params;
         const formData = await request.formData();
 
-        const name = formData.get("name") as string | null;
-        const nickname = formData.get("nickname") as string | null;
-        const description = formData.get("description") as string | null;
-        const quote = formData.get("quote") as string | null;
+        const rawData = {
+            name: formData.get("name") as string | undefined,
+            nickname: formData.get("nickname") as string | null,
+            description: formData.get("description") as string | null,
+            quote: formData.get("quote") as string | null,
+        };
         const file = formData.get("photo") as File | null;
         const removePhoto = formData.get("removePhoto") === "true";
+
+        // Validate with Zod (partial for updates)
+        const validation = validateData(updateStudentSchema, rawData);
+        if (!validation.success) {
+            return NextResponse.json(
+                { error: validation.error },
+                { status: 400 }
+            );
+        }
+
+        const { name, nickname, description, quote } = validation.data;
 
         // Get current student
         const currentStudent = await prisma.student.findUnique({
@@ -93,9 +107,9 @@ export async function PUT(
             where: { id },
             data: {
                 ...(name && { name }),
-                nickname: nickname !== null ? nickname : currentStudent.nickname,
-                description: description !== null ? description : currentStudent.description,
-                quote: quote !== null ? quote : currentStudent.quote,
+                nickname: nickname !== undefined ? nickname : currentStudent.nickname,
+                description: description !== undefined ? description : currentStudent.description,
+                quote: quote !== undefined ? quote : currentStudent.quote,
                 photoUrl,
                 photoId,
             },
