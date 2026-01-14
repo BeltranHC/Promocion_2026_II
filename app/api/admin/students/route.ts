@@ -3,6 +3,7 @@ import prisma from "@/lib/db";
 import { verifyAdmin } from "@/lib/adminAuth";
 import { uploadImage } from "@/lib/cloudinary";
 import { createStudentSchema, validateData } from "@/lib/validators";
+import { handleApiError, UnauthorizedError, ValidationError, createdResponse } from "@/lib/errors";
 
 // GET - List all students
 export async function GET(request: NextRequest) {
@@ -17,11 +18,7 @@ export async function GET(request: NextRequest) {
 
         return NextResponse.json({ students });
     } catch (error) {
-        console.error("Error fetching students:", error);
-        return NextResponse.json(
-            { error: "Error al obtener estudiantes" },
-            { status: 500 }
-        );
+        return handleApiError(error, "GET /api/admin/students");
     }
 }
 
@@ -30,10 +27,7 @@ export async function POST(request: NextRequest) {
     try {
         const admin = await verifyAdmin(request);
         if (!admin) {
-            return NextResponse.json(
-                { error: "No autorizado" },
-                { status: 401 }
-            );
+            throw new UnauthorizedError();
         }
 
         const formData = await request.formData();
@@ -48,10 +42,7 @@ export async function POST(request: NextRequest) {
         // Validate with Zod
         const validation = validateData(createStudentSchema, rawData);
         if (!validation.success) {
-            return NextResponse.json(
-                { error: validation.error },
-                { status: 400 }
-            );
+            throw new ValidationError(validation.error);
         }
 
         const { name, nickname, description, quote } = validation.data;
@@ -77,12 +68,8 @@ export async function POST(request: NextRequest) {
             },
         });
 
-        return NextResponse.json({ student }, { status: 201 });
+        return createdResponse({ student });
     } catch (error) {
-        console.error("Error creating student:", error);
-        return NextResponse.json(
-            { error: "Error al crear estudiante" },
-            { status: 500 }
-        );
+        return handleApiError(error, "POST /api/admin/students");
     }
 }
