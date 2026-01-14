@@ -86,7 +86,7 @@ export function handleApiError(error: unknown, context?: string): NextResponse<E
 
     // Zod Validation Errors
     if (error instanceof ZodError) {
-        const messages = error.errors.map((e) => e.message).join(", ");
+        const messages = error.issues.map((e: { message: string }) => e.message).join(", ");
         return NextResponse.json(
             { error: messages, code: "VALIDATION_ERROR" },
             { status: 400 }

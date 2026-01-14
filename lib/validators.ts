@@ -73,9 +73,10 @@ export type UpdateEventInput = z.infer<typeof updateEventSchema>;
 export const galleryCategories = ["campus", "friends", "events"] as const;
 
 export const createGalleryImageSchema = z.object({
-    category: z.enum(galleryCategories, {
-        errorMap: () => ({ message: "Categoría inválida. Use: campus, friends, events" }),
-    }),
+    category: z.enum(["campus", "friends", "events"]).refine(
+        (val) => galleryCategories.includes(val as typeof galleryCategories[number]),
+        { message: "Categoría inválida. Use: campus, friends, events" }
+    ),
     label: z.string()
         .min(2, "La etiqueta debe tener al menos 2 caracteres")
         .max(100, "La etiqueta no puede exceder 100 caracteres"),
@@ -190,7 +191,7 @@ export function validateData<T>(
     const result = schema.safeParse(data);
     
     if (!result.success) {
-        const errors = result.error.errors.map(e => e.message).join(", ");
+        const errors = result.error.issues.map((e: { message: string }) => e.message).join(", ");
         return { success: false, error: errors };
     }
     
