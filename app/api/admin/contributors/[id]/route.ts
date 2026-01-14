@@ -1,17 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
-import { verifyToken, getTokenFromCookies } from "@/lib/auth";
-
-// Helper to verify admin auth
-async function verifyAdmin(request: NextRequest) {
-    const cookieHeader = request.headers.get("cookie");
-    const token = getTokenFromCookies(cookieHeader);
-
-    if (!token) return null;
-
-    const payload = verifyToken(token);
-    return payload;
-}
+import { verifyAdmin } from "@/lib/adminAuth";
 
 // PUT - Update contributor
 export async function PUT(

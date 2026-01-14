@@ -1,18 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
-import { verifyToken, getTokenFromCookies } from "@/lib/auth";
+import { verifyAdmin } from "@/lib/adminAuth";
 import { uploadImage } from "@/lib/cloudinary";
-
-// Helper to verify admin auth
-async function verifyAdmin(request: NextRequest) {
-    const cookieHeader = request.headers.get("cookie");
-    const token = getTokenFromCookies(cookieHeader);
-
-    if (!token) return null;
-
-    const payload = verifyToken(token);
-    return payload;
-}
 
 // GET - List all gallery images
 export async function GET(request: NextRequest) {
