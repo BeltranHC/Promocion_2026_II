@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { verifyAdmin } from "@/lib/adminAuth";
+import { createEventSchema, validateData } from "@/lib/validators";
 
 // GET - List all events
 export async function GET(request: NextRequest) {
@@ -46,13 +47,23 @@ export async function POST(request: NextRequest) {
         }
 
         const body = await request.json();
-        const { 
-            date, 
-            year, 
-            title, 
-            description, 
-            status, 
-            icon, 
+
+        // Validate with Zod
+        const validation = validateData(createEventSchema, body);
+        if (!validation.success) {
+            return NextResponse.json(
+                { error: validation.error },
+                { status: 400 }
+            );
+        }
+
+        const {
+            date,
+            year,
+            title,
+            description,
+            status,
+            icon,
             order,
             fullDescription,
             location,
@@ -62,14 +73,7 @@ export async function POST(request: NextRequest) {
             hasTickets,
             schedule,
             instructions,
-        } = body;
-
-        if (!date || !year || !title || !description) {
-            return NextResponse.json(
-                { error: "Campos requeridos faltantes" },
-                { status: 400 }
-            );
-        }
+        } = validation.data;
 
         const event = await prisma.event.create({
             data: {
@@ -77,15 +81,15 @@ export async function POST(request: NextRequest) {
                 year,
                 title,
                 description,
-                status: status || "upcoming",
-                icon: icon || "📅",
-                order: order || 0,
+                status,
+                icon,
+                order,
                 fullDescription: fullDescription || null,
                 location: location || null,
                 time: time || null,
-                ticketPrice: ticketPrice ? parseFloat(ticketPrice) : null,
-                maxTickets: maxTickets ? parseInt(maxTickets) : null,
-                hasTickets: hasTickets || false,
+                ticketPrice: ticketPrice || null,
+                maxTickets: maxTickets || null,
+                hasTickets,
                 schedule: schedule ? JSON.stringify(schedule) : null,
                 instructions: instructions || null,
             },

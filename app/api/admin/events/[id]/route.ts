@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { verifyAdmin } from "@/lib/adminAuth";
+import { updateEventSchema, validateData } from "@/lib/validators";
 
 // GET - Get single event
 export async function GET(
@@ -47,15 +48,27 @@ export async function PUT(
 
         const { id } = await params;
         const body = await request.json();
-        const { 
-            date, 
-            year, 
-            title, 
-            description, 
-            status, 
-            icon, 
-            order, 
-            isActive,
+
+        // Extract isActive separately (not in event schema)
+        const { isActive, ...eventData } = body;
+
+        // Validate with Zod (partial for updates)
+        const validation = validateData(updateEventSchema, eventData);
+        if (!validation.success) {
+            return NextResponse.json(
+                { error: validation.error },
+                { status: 400 }
+            );
+        }
+
+        const {
+            date,
+            year,
+            title,
+            description,
+            status,
+            icon,
+            order,
             fullDescription,
             location,
             time,
@@ -64,7 +77,7 @@ export async function PUT(
             hasTickets,
             schedule,
             instructions,
-        } = body;
+        } = validation.data;
 
         const event = await prisma.event.update({
             where: { id },
@@ -80,8 +93,8 @@ export async function PUT(
                 ...(fullDescription !== undefined && { fullDescription: fullDescription || null }),
                 ...(location !== undefined && { location: location || null }),
                 ...(time !== undefined && { time: time || null }),
-                ...(ticketPrice !== undefined && { ticketPrice: ticketPrice ? parseFloat(ticketPrice) : null }),
-                ...(maxTickets !== undefined && { maxTickets: maxTickets ? parseInt(maxTickets) : null }),
+                ...(ticketPrice !== undefined && { ticketPrice: ticketPrice || null }),
+                ...(maxTickets !== undefined && { maxTickets: maxTickets || null }),
                 ...(hasTickets !== undefined && { hasTickets }),
                 ...(schedule !== undefined && { schedule: schedule ? JSON.stringify(schedule) : null }),
                 ...(instructions !== undefined && { instructions: instructions || null }),
