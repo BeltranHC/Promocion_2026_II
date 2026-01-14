@@ -8,7 +8,8 @@ import {
     DollarSign,
     TrendingUp,
     Plus,
-    ArrowRight
+    ArrowRight,
+    LucideIcon
 } from "lucide-react";
 import Link from "next/link";
 
@@ -22,7 +23,7 @@ function StatsCard({
 }: {
     title: string;
     value: string | number;
-    icon: any;
+    icon: LucideIcon;
     trend?: string;
     color: string;
 }) {
@@ -57,7 +58,7 @@ function QuickAction({
     title: string;
     description: string;
     href: string;
-    icon: any;
+    icon: LucideIcon;
 }) {
     return (
         <Link
