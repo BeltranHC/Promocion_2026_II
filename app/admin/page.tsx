@@ -27,6 +27,23 @@ interface DashboardStats {
     weeklyNewContributions: number;
 }
 
+interface ActivityItem {
+    type: string;
+    action: string;
+    detail: string;
+    time: string;
+    timeFormatted: string;
+}
+
+// Activity icon mapping
+const activityIcons: Record<string, LucideIcon> = {
+    event: Calendar,
+    gallery: Image,
+    payment: DollarSign,
+    ticket_sale: DollarSign,
+    student: Users,
+};
+
 // Stats Card Component
 function StatsCard({
     title,
@@ -93,14 +110,17 @@ function QuickAction({
 
 export default function AdminDashboardPage() {
     const [stats, setStats] = useState<DashboardStats | null>(null);
+    const [activities, setActivities] = useState<ActivityItem[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [isLoadingActivity, setIsLoadingActivity] = useState(true);
 
     useEffect(() => {
-        const fetchStats = async () => {
+        const fetchData = async () => {
             try {
-                const res = await fetch("/api/admin/stats");
-                if (res.ok) {
-                    const data = await res.json();
+                // Fetch stats
+                const statsRes = await fetch("/api/admin/stats");
+                if (statsRes.ok) {
+                    const data = await statsRes.json();
                     setStats(data.stats);
                 }
             } catch (error) {
@@ -108,9 +128,22 @@ export default function AdminDashboardPage() {
             } finally {
                 setIsLoading(false);
             }
+
+            try {
+                // Fetch activity
+                const activityRes = await fetch("/api/admin/activity");
+                if (activityRes.ok) {
+                    const data = await activityRes.json();
+                    setActivities(data.activities || []);
+                }
+            } catch (error) {
+                console.error("Error fetching activity:", error);
+            } finally {
+                setIsLoadingActivity(false);
+            }
         };
 
-        fetchStats();
+        fetchData();
     }, []);
 
     return (
@@ -279,24 +312,49 @@ export default function AdminDashboardPage() {
                     <h2 className="text-lg font-semibold text-white mb-4">
                         Actividad Reciente
                     </h2>
-                    <div className="space-y-4">
-                        {[
-                            { action: "Nuevo evento creado", detail: "Sesión de Fotos Oficial", time: "Hace 2 días" },
-                            { action: "Imagen subida", detail: "Foto del campus", time: "Hace 3 días" },
-                            { action: "Aporte registrado", detail: "Juan P. - S/. 20", time: "Hace 5 días" },
-                        ].map((item, index) => (
-                            <div
-                                key={index}
-                                className="flex items-center justify-between p-4 bg-slate-800/30 rounded-xl"
-                            >
-                                <div>
-                                    <p className="text-white text-sm font-medium">{item.action}</p>
-                                    <p className="text-slate-400 text-xs mt-1">{item.detail}</p>
+                    {isLoadingActivity ? (
+                        <div className="space-y-4">
+                            {[1, 2, 3].map((i) => (
+                                <div key={i} className="flex items-center justify-between p-4 bg-slate-800/30 rounded-xl animate-pulse">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 bg-slate-700 rounded-lg" />
+                                        <div>
+                                            <div className="h-4 bg-slate-700 rounded w-32 mb-2" />
+                                            <div className="h-3 bg-slate-700 rounded w-24" />
+                                        </div>
+                                    </div>
+                                    <div className="h-3 bg-slate-700 rounded w-16" />
                                 </div>
-                                <span className="text-slate-500 text-xs">{item.time}</span>
-                            </div>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
+                    ) : activities.length === 0 ? (
+                        <div className="text-center py-8">
+                            <p className="text-slate-400 text-sm">No hay actividad reciente</p>
+                        </div>
+                    ) : (
+                        <div className="space-y-4">
+                            {activities.slice(0, 5).map((item, index) => {
+                                const IconComponent = activityIcons[item.type] || Calendar;
+                                return (
+                                    <div
+                                        key={index}
+                                        className="flex items-center justify-between p-4 bg-slate-800/30 rounded-xl hover:bg-slate-800/50 transition-colors"
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <div className="p-2.5 rounded-lg bg-amber-500/10 text-amber-400">
+                                                <IconComponent size={18} />
+                                            </div>
+                                            <div>
+                                                <p className="text-white text-sm font-medium">{item.action}</p>
+                                                <p className="text-slate-400 text-xs mt-1">{item.detail}</p>
+                                            </div>
+                                        </div>
+                                        <span className="text-slate-500 text-xs whitespace-nowrap">{item.timeFormatted}</span>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
