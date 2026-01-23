@@ -119,6 +119,21 @@ Dashboard con métricas en tiempo real
 ✅ Animaciones fluidas con Framer Motion
 ```
 
+### 🆕 **Características Recientes** (v1.1.0)
+
+```
+⏱️  Contador regresivo para la graduación en Hero
+📊 Dashboard con estadísticas dinámicas en tiempo real
+🔍 SEO mejorado con Schema.org JSON-LD estructurado
+💀 Componentes skeleton para estados de carga
+🚫 Página 404 personalizada con navegación
+🎨 Componente Button reutilizable con variantes
+♿ Mejoras de accesibilidad (ARIA, skip-links, reduced motion)
+🔗 Meta tags dinámicos para compartir en redes sociales
+⌨️  Navegación por teclado en menú móvil
+📰 Feed de actividad reciente en dashboard admin
+```
+
 ---
 
 ## 🛠️ **Stack Tecnológico**
