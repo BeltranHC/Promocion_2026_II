@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { handleApiError } from "@/lib/errors";
-import { verifyAdminToken } from "@/lib/adminAuth";
+import { verifyAdmin } from "@/lib/adminAuth";
+import { NextRequest } from "next/server";
 
 // Types
 interface ActivityItem {
@@ -12,10 +13,13 @@ interface ActivityItem {
 }
 
 // GET - Recent activity for dashboard
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
     try {
         // Verify admin is authenticated
-        await verifyAdminToken(request);
+        const admin = await verifyAdmin(request);
+        if (!admin) {
+            return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+        }
 
         // Get recent items from different tables in parallel
         const [recentEvents, recentGallery, recentPayments, recentTicketSales, recentStudents] = await Promise.all([

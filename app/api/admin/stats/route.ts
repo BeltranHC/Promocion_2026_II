@@ -1,13 +1,17 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { handleApiError } from "@/lib/errors";
-import { verifyAdminToken } from "@/lib/adminAuth";
+import { verifyAdmin } from "@/lib/adminAuth";
+import { NextRequest } from "next/server";
 
 // GET - Dashboard stats
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
     try {
         // Verify admin is authenticated
-        await verifyAdminToken(request);
+        const admin = await verifyAdmin(request);
+        if (!admin) {
+            return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+        }
 
         // Get counts in parallel
         const [
