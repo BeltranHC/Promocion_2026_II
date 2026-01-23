@@ -28,6 +28,58 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Screen reader only utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Focus visible for keyboard navigation */
+.focus-visible:focus-visible {
+  outline: 2px solid var(--una-gold);
+  outline-offset: 2px;
+}
+
+/* Skip to content link */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--una-gold);
+  color: var(--dark-bg);
+  padding: 8px 16px;
+  z-index: 100;
+  font-weight: 600;
+  transition: top 0.3s;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
 body {
   background: var(--dark-bg);
   color: #ffffff;

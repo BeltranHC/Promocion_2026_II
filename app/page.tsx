@@ -7,13 +7,13 @@ import FundSection from "@/components/FundSection";
 
 export default function Home() {
     return (
-        <div className="bg-animated min-h-screen">
+        <main id="main-content" className="bg-animated min-h-screen">
             <Hero />
             <InfoSection />
             <EventsSection />
             <MembersSection />
             <GallerySection />
             <FundSection />
-        </div>
+        </main>
     );
 }

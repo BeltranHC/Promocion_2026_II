@@ -55,6 +55,9 @@ export default function RootLayout({
                 />
             </head>
             <body className={`${spaceGrotesk.variable} font-sans antialiased`}>
+                <a href="#main-content" className="skip-link">
+                    Saltar al contenido principal
+                </a>
                 <LayoutWrapper>{children}</LayoutWrapper>
                 <Toaster 
                     position="top-right"

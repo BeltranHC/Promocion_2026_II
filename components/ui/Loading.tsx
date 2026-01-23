@@ -15,7 +15,11 @@ const sizes = {
 
 export function LoadingSpinner({ size = "md", className = "" }: LoadingSpinnerProps) {
     return (
-        <div className={`${sizes[size]} ${className}`}>
+        <div 
+            className={`${sizes[size]} ${className}`}
+            role="status"
+            aria-label="Cargando"
+        >
             <motion.div
                 className="w-full h-full border-2 border-amber-500/30 border-t-amber-500 rounded-full"
                 animate={{ rotate: 360 }}
@@ -25,6 +29,7 @@ export function LoadingSpinner({ size = "md", className = "" }: LoadingSpinnerPr
                     ease: "linear",
                 }}
             />
+            <span className="sr-only">Cargando...</span>
         </div>
     );
 }
@@ -35,10 +40,15 @@ interface LoadingOverlayProps {
 
 export function LoadingOverlay({ message = "Cargando..." }: LoadingOverlayProps) {
     return (
-        <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div 
+            className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="loading-message"
+        >
             <div className="flex flex-col items-center gap-4">
                 <LoadingSpinner size="lg" />
-                <p className="text-white/80 text-sm">{message}</p>
+                <p id="loading-message" className="text-white/80 text-sm" aria-live="polite">{message}</p>
             </div>
         </div>
     );
