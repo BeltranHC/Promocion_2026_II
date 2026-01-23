@@ -3,7 +3,8 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { PARTICLE_COUNT } from "@/constants";
+import { PARTICLE_COUNT, GRADUATION_DATE } from "@/constants";
+import CountdownTimer from "./ui/CountdownTimer";
 
 interface ParticleProps {
     delay: number;
@@ -134,7 +135,7 @@ export default function Hero() {
                 </p>
 
                 {/* CTA Buttons */}
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
                     <a href="#info" className="neon-button">
                         Conocer Más
                     </a>
@@ -145,6 +146,12 @@ export default function Hero() {
                         Ver Eventos
                     </a>
                 </div>
+
+                {/* Countdown Timer */}
+                <CountdownTimer 
+                    targetDate={GRADUATION_DATE} 
+                    label="Tiempo restante para la graduación"
+                />
 
                 {/* Scroll Indicator */}
                 {mounted && (

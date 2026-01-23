@@ -110,3 +110,6 @@ export const GALLERY_CATEGORIES: Category[] = [
 
 // Particle configuration for Hero
 export const PARTICLE_COUNT = 15;
+
+// Graduation date - July 15, 2026
+export const GRADUATION_DATE = new Date('2026-07-15T10:00:00');
