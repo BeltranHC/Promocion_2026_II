@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import AdminHeader from "@/components/admin/AdminHeader";
 import {
     Calendar,
@@ -9,9 +10,22 @@ import {
     TrendingUp,
     Plus,
     ArrowRight,
-    LucideIcon
+    LucideIcon,
+    Loader2
 } from "lucide-react";
 import Link from "next/link";
+
+interface DashboardStats {
+    eventsCount: number;
+    galleryCount: number;
+    studentsCount: number;
+    activeContributors: number;
+    fundTotal: number;
+    goal: number;
+    progress: number;
+    weeklyAmount: number;
+    weeklyNewContributions: number;
+}
 
 // Stats Card Component
 function StatsCard({
@@ -78,6 +92,27 @@ function QuickAction({
 }
 
 export default function AdminDashboardPage() {
+    const [stats, setStats] = useState<DashboardStats | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                const res = await fetch("/api/admin/stats");
+                if (res.ok) {
+                    const data = await res.json();
+                    setStats(data.stats);
+                }
+            } catch (error) {
+                console.error("Error fetching stats:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchStats();
+    }, []);
+
     return (
         <div>
             <AdminHeader
@@ -87,17 +122,45 @@ export default function AdminDashboardPage() {
 
             <div className="p-8">
                 {/* Stats Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    <StatsCard
-                        title="Total Eventos"
-                        value={4}
-                        icon={Calendar}
-                        color="from-blue-500 to-blue-600"
-                    />
-                    <StatsCard
-                        title="Imágenes en Galería"
-                        value={6}
-                        icon={Image}
+                {isLoading ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        {[1, 2, 3, 4].map((i) => (
+                            <div key={i} className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 animate-pulse">
+                                <div className="h-4 bg-slate-700 rounded w-1/2 mb-4" />
+                                <div className="h-8 bg-slate-700 rounded w-1/3" />
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <StatsCard
+                            title="Total Eventos"
+                            value={stats?.eventsCount ?? 0}
+                            icon={Calendar}
+                            color="from-blue-500 to-blue-600"
+                        />
+                        <StatsCard
+                            title="Imágenes en Galería"
+                            value={stats?.galleryCount ?? 0}
+                            icon={Image}
+                            color="from-purple-500 to-purple-600"
+                        />
+                        <StatsCard
+                            title="Contribuidores"
+                            value={stats?.activeContributors ?? 0}
+                            icon={Users}
+                            trend={stats?.weeklyNewContributions ? `+${stats.weeklyNewContributions} esta semana` : undefined}
+                            color="from-emerald-500 to-emerald-600"
+                        />
+                        <StatsCard
+                            title="Fondo Recaudado"
+                            value={`S/. ${(stats?.fundTotal ?? 0).toLocaleString()}`}
+                            icon={DollarSign}
+                            trend={stats ? `${stats.progress}% de la meta` : undefined}
+                            color="from-amber-500 to-red-600"
+                        />
+                    </div>
+                )}
                         color="from-purple-500 to-purple-600"
                     />
                     <StatsCard
@@ -160,33 +223,47 @@ export default function AdminDashboardPage() {
                             Progreso del Fondo
                         </h2>
 
-                        <div className="mb-6">
-                            <div className="flex justify-between text-sm mb-2">
-                                <span className="text-slate-400">Recaudado</span>
-                                <span className="text-white font-medium">S/. 1,250 / S/. 5,000</span>
+                        {isLoading ? (
+                            <div className="flex items-center justify-center py-8">
+                                <Loader2 className="w-6 h-6 text-amber-400 animate-spin" />
                             </div>
-                            <div className="h-3 bg-slate-800 rounded-full overflow-hidden">
-                                <div
-                                    className="h-full bg-gradient-to-r from-amber-500 to-red-600 rounded-full transition-all duration-500"
-                                    style={{ width: "25%" }}
-                                />
-                            </div>
-                        </div>
+                        ) : (
+                            <>
+                                <div className="mb-6">
+                                    <div className="flex justify-between text-sm mb-2">
+                                        <span className="text-slate-400">Recaudado</span>
+                                        <span className="text-white font-medium">
+                                            S/. {(stats?.fundTotal ?? 0).toLocaleString()} / S/. {(stats?.goal ?? 5000).toLocaleString()}
+                                        </span>
+                                    </div>
+                                    <div className="h-3 bg-slate-800 rounded-full overflow-hidden">
+                                        <div
+                                            className="h-full bg-gradient-to-r from-amber-500 to-red-600 rounded-full transition-all duration-500"
+                                            style={{ width: `${Math.min(stats?.progress ?? 0, 100)}%` }}
+                                        />
+                                    </div>
+                                </div>
 
-                        <div className="space-y-4">
-                            <div className="flex justify-between items-center p-3 bg-slate-800/50 rounded-lg">
-                                <span className="text-slate-400 text-sm">Miembros activos</span>
-                                <span className="text-white font-medium">25 / 50</span>
-                            </div>
-                            <div className="flex justify-between items-center p-3 bg-slate-800/50 rounded-lg">
-                                <span className="text-slate-400 text-sm">Aporte semanal</span>
-                                <span className="text-white font-medium">S/. 5.00</span>
-                            </div>
-                            <div className="flex justify-between items-center p-3 bg-slate-800/50 rounded-lg">
-                                <span className="text-slate-400 text-sm">Meta restante</span>
-                                <span className="text-amber-400 font-medium">S/. 3,750</span>
-                            </div>
-                        </div>
+                                <div className="space-y-4">
+                                    <div className="flex justify-between items-center p-3 bg-slate-800/50 rounded-lg">
+                                        <span className="text-slate-400 text-sm">Miembros activos</span>
+                                        <span className="text-white font-medium">
+                                            {stats?.activeContributors ?? 0} / {stats?.studentsCount ?? 0}
+                                        </span>
+                                    </div>
+                                    <div className="flex justify-between items-center p-3 bg-slate-800/50 rounded-lg">
+                                        <span className="text-slate-400 text-sm">Aporte semanal</span>
+                                        <span className="text-white font-medium">S/. {(stats?.weeklyAmount ?? 5).toFixed(2)}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center p-3 bg-slate-800/50 rounded-lg">
+                                        <span className="text-slate-400 text-sm">Meta restante</span>
+                                        <span className="text-amber-400 font-medium">
+                                            S/. {((stats?.goal ?? 5000) - (stats?.fundTotal ?? 0)).toLocaleString()}
+                                        </span>
+                                    </div>
+                                </div>
+                            </>
+                        )}
 
                         <Link
                             href="/admin/settings"
